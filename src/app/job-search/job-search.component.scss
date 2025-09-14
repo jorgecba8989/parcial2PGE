@@ -1,3 +1,10 @@
+// Variables CSS optimizadas
+:root {
+  --card-shadow: 0 8px 32px rgba(102, 126, 234, 0.15);
+  --card-radius: 20px;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 .job-search-container {
   min-height: 100vh;
   background: var(--background-gradient);
@@ -12,7 +19,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.05"/><circle cx="10" cy="90" r="0.5" fill="white" opacity="0.05"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
     pointer-events: none;
     z-index: 0;
   }
@@ -47,10 +54,8 @@ mat-toolbar {
 .search-card {
   margin-bottom: 30px;
   background: var(--card-gradient);
-  border-radius: 20px;
-  box-shadow: 
-    0 10px 30px rgba(102, 126, 234, 0.2),
-    0 6px 20px rgba(118, 75, 162, 0.1);
+  border-radius: var(--card-radius);
+  box-shadow: var(--card-shadow), 0 6px 20px rgba(118, 75, 162, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(10px);
   
@@ -58,7 +63,7 @@ mat-toolbar {
     background: #f5f5f5;
     margin: -24px -24px 20px -24px;
     padding: 24px;
-    border-radius: 20px 20px 0 0;
+    border-radius: var(--card-radius) var(--card-radius) 0 0;
     
     mat-card-title {
       color: var(--color-dark);
@@ -87,11 +92,7 @@ mat-toolbar {
     }
   }
 
-  .search-field, .location-field {
-    flex: 1;
-  }
-
-  .select-field {
+  .search-field, .location-field, .select-field {
     flex: 1;
   }
 
@@ -169,13 +170,11 @@ mat-toolbar {
 
 .job-card {
   background: var(--card-gradient);
-  border-radius: 20px;
+  border-radius: var(--card-radius);
   border: 1px solid rgba(255, 255, 255, 0.6);
-  box-shadow: 
-    0 8px 32px rgba(102, 126, 234, 0.15),
-    0 4px 16px rgba(118, 75, 162, 0.1);
+  box-shadow: var(--card-shadow), 0 4px 16px rgba(118, 75, 162, 0.1);
   backdrop-filter: blur(10px);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: var(--transition);
   cursor: pointer;
   overflow: hidden;
   position: relative;
@@ -194,9 +193,7 @@ mat-toolbar {
   
   &:hover {
     transform: translateY(-8px) scale(1.02);
-    box-shadow: 
-      0 20px 40px rgba(102, 126, 234, 0.25),
-      0 10px 25px rgba(118, 75, 162, 0.15);
+    box-shadow: 0 20px 40px rgba(102, 126, 234, 0.25), 0 10px 25px rgba(118, 75, 162, 0.15);
     border-color: rgba(240, 147, 251, 0.4);
     
     &::before {
@@ -253,7 +250,7 @@ mat-toolbar {
       background: rgba(102, 126, 234, 0.08);
       border-radius: 25px;
       border: 1px solid rgba(102, 126, 234, 0.2);
-      transition: all 0.3s ease;
+      transition: var(--transition);
       
       &:hover {
         background: rgba(240, 147, 251, 0.15);
@@ -318,7 +315,7 @@ mat-toolbar {
           border-radius: 20px;
           padding: 8px 16px;
           box-shadow: 0 4px 12px rgba(79, 172, 254, 0.2);
-          transition: all 0.3s ease;
+          transition: var(--transition);
           
           &:hover {
             transform: translateY(-2px);
@@ -336,7 +333,7 @@ mat-card-actions {
   padding: 20px;
   background: rgba(168, 237, 234, 0.05);
   border-top: 1px solid rgba(168, 237, 234, 0.2);
-  border-radius: 0 0 20px 20px;
+  border-radius: 0 0 var(--card-radius) var(--card-radius);
   
   button {
     display: flex;
@@ -345,7 +342,7 @@ mat-card-actions {
     padding: 10px 20px;
     border-radius: 25px;
     font-weight: 600;
-    transition: all 0.3s ease;
+    transition: var(--transition);
     
     &[color="primary"] {
       background: var(--primary-gradient);
@@ -382,9 +379,9 @@ mat-card-actions {
   text-align: center;
   padding: 80px 20px;
   background: var(--card-gradient);
-  border-radius: 20px;
+  border-radius: var(--card-radius);
   border: 1px solid rgba(255, 255, 255, 0.6);
-  box-shadow: 0 8px 32px rgba(102, 126, 234, 0.15);
+  box-shadow: var(--card-shadow);
   margin-top: 20px;
   
   .large-icon {
@@ -448,27 +445,6 @@ mat-form-field {
   
   .accessibility-features mat-chip {
     border-color: #000;
-  }
-}
-
-// Dark mode support
-@media (prefers-color-scheme: dark) {
-  .job-search-container {
-    background-color: #121212;
-    color: #fff;
-  }
-  
-  .search-card, .job-card {
-    background-color: #1e1e1e;
-    color: #fff;
-  }
-  
-  .job-description {
-    color: #ccc;
-  }
-  
-  .company-info {
-    color: #aaa;
   }
 }
 
