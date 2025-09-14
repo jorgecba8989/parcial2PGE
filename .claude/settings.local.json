@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ng add:*)",
+      "Bash(ng generate:*)",
+      "Bash(ng serve)",
+      "Bash(ng serve:*)",
+      "Bash(dir:*)",
+      "Bash(npm install:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

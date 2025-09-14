@@ -1,0 +1,99 @@
+<div class="application-dialog">
+  <h2 mat-dialog-title>
+    <mat-icon>email</mat-icon>
+    Enviar Email
+  </h2>
+
+  <mat-dialog-content>
+
+    <form [formGroup]="applicationForm" class="application-form">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Email destinatario</mat-label>
+        <input matInput
+               type="email"
+               formControlName="toEmail"
+               placeholder="destinatario@ejemplo.com"
+               aria-label="Ingresa el email del destinatario">
+        <mat-icon matSuffix>email</mat-icon>
+        <mat-error *ngIf="applicationForm.get('toEmail')?.hasError('required')">
+          El email del destinatario es requerido
+        </mat-error>
+        <mat-error *ngIf="applicationForm.get('toEmail')?.hasError('email')">
+          Ingresa un email válido
+        </mat-error>
+      </mat-form-field>
+
+      <div class="file-upload-section">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Archivo adjunto (opcional)</mat-label>
+          <input matInput
+                 readonly
+                 [value]="selectedFileName"
+                 placeholder="Selecciona un archivo (PDF o Word)"
+                 aria-label="Archivo adjunto seleccionado">
+          <mat-icon matSuffix>attach_file</mat-icon>
+        </mat-form-field>
+
+        <input #fileInput
+               type="file"
+               accept=".pdf,.doc,.docx"
+               (change)="onFileSelected($event)"
+               style="display: none;"
+               aria-label="Seleccionar archivo adjunto">
+
+        <button mat-stroked-button
+                type="button"
+                (click)="fileInput.click()"
+                class="file-select-button"
+                aria-label="Buscar archivo en tu dispositivo">
+          <mat-icon>folder_open</mat-icon>
+          Seleccionar archivo
+        </button>
+
+        <div *ngIf="fileError" class="file-error">
+          <mat-icon color="warn">error</mat-icon>
+          {{ fileError }}
+        </div>
+      </div>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Mensaje</mat-label>
+        <textarea matInput
+                  formControlName="message"
+                  rows="4"
+                  placeholder="Escribe tu mensaje aquí..."
+                  aria-label="Mensaje del email">
+        </textarea>
+        <mat-icon matSuffix>message</mat-icon>
+        <mat-error *ngIf="applicationForm.get('message')?.hasError('required')">
+          El mensaje es requerido
+        </mat-error>
+      </mat-form-field>
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button
+            (click)="onCancel()"
+            aria-label="Cancelar envío de email">
+      <mat-icon>close</mat-icon>
+      Cancelar
+    </button>
+
+    <button mat-raised-button
+            color="primary"
+            (click)="onSubmit()"
+            [disabled]="applicationForm.invalid || isLoading"
+            aria-label="Enviar email">
+      <mat-icon *ngIf="!isLoading">send</mat-icon>
+      <mat-spinner *ngIf="isLoading"
+                   diameter="20"
+                   strokeWidth="2"
+                   color="accent">
+      </mat-spinner>
+      <span [attr.aria-live]="isLoading ? 'polite' : null">
+        {{ isLoading ? 'Enviando...' : 'Enviar Email' }}
+      </span>
+    </button>
+  </mat-dialog-actions>
+</div>

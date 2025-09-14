@@ -1,0 +1,168 @@
+<div class="job-search-container">
+  <!-- Header -->
+  <mat-toolbar color="primary">
+    <mat-icon>work</mat-icon>
+    <span>Búsqueda de Trabajo Inclusivo</span>
+  </mat-toolbar>
+
+  <div class="content-container">
+    <!-- Search Form -->
+    <mat-card class="search-card">
+      <mat-card-header>
+        <mat-card-title>Encuentra tu oportunidad laboral</mat-card-title>
+        <mat-card-subtitle>Trabajos inclusivos y accesibles</mat-card-subtitle>
+      </mat-card-header>
+      
+      <mat-card-content>
+        <form [formGroup]="searchForm" class="search-form">
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="search-field">
+              <mat-label>Buscar trabajo, empresa o palabra clave</mat-label>
+              <input matInput formControlName="searchTerm" placeholder="Ej: desarrollador, contabilidad...">
+              <mat-icon matSuffix>search</mat-icon>
+            </mat-form-field>
+            
+            <mat-form-field appearance="outline" class="location-field">
+              <mat-label>Ubicación</mat-label>
+              <input matInput formControlName="location" placeholder="Ej: Buenos Aires, Córdoba...">
+              <mat-icon matSuffix>location_on</mat-icon>
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="select-field">
+              <mat-label>Tipo de trabajo</mat-label>
+              <mat-select formControlName="jobType">
+                <mat-option value="">Todos</mat-option>
+                <mat-option *ngFor="let type of jobTypes" [value]="type">
+                  {{ type }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            
+            <mat-form-field appearance="outline" class="select-field">
+              <mat-label>Características de accesibilidad</mat-label>
+              <mat-select formControlName="accessibility">
+                <mat-option value="">Todas</mat-option>
+                <mat-option *ngFor="let option of accessibilityOptions" [value]="option">
+                  {{ option }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div class="form-actions">
+            <mat-checkbox formControlName="remoteOnly" color="primary">
+              Solo trabajos remotos
+            </mat-checkbox>
+
+            <div class="action-buttons">
+              <button mat-raised-button color="primary" type="button" (click)="onSearch()"
+                      aria-label="Buscar oportunidades de trabajo">
+                <mat-icon>search</mat-icon>
+                Buscar
+              </button>
+
+              <button mat-raised-button color="warn" type="button" (click)="clearFilters()"
+                      aria-label="Limpiar todos los filtros de búsqueda">
+                <mat-icon>clear</mat-icon>
+                Limpiar filtros
+              </button>
+            </div>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Results Section -->
+    <div class="results-section">
+      <div class="results-header">
+        <h2>{{ filteredJobs.length }} oportunidades encontradas</h2>
+      </div>
+
+      <!-- Job Cards -->
+      <div class="job-grid">
+        <mat-card *ngFor="let job of filteredJobs" class="job-card">
+          <mat-card-header>
+            <mat-card-title>{{ job.title }}</mat-card-title>
+            <mat-card-subtitle>
+              <div class="company-info">
+                <mat-icon>business</mat-icon>
+                {{ job.company }}
+              </div>
+            </mat-card-subtitle>
+          </mat-card-header>
+          
+          <mat-card-content>
+            <div class="job-details">
+              <div class="job-meta">
+                <div class="meta-item">
+                  <mat-icon>location_on</mat-icon>
+                  <span>{{ job.location }}</span>
+                </div>
+                
+                <div class="meta-item">
+                  <mat-icon>schedule</mat-icon>
+                  <span>{{ job.type }}</span>
+                </div>
+                
+                <div class="meta-item" *ngIf="job.salary">
+                  <mat-icon>attach_money</mat-icon>
+                  <span>{{ job.salary }}</span>
+                </div>
+                
+                <div class="meta-item" *ngIf="job.remote">
+                  <mat-icon>laptop</mat-icon>
+                  <span>Remoto</span>
+                </div>
+              </div>
+              
+              <p class="job-description">{{ job.description }}</p>
+              
+              <div class="accessibility-features">
+                <h4>Características de accesibilidad:</h4>
+                <div class="chips-container">
+                  <mat-chip-listbox>
+                    <mat-chip *ngFor="let feature of job.accessibility" color="accent" selected>
+                      {{ feature }}
+                    </mat-chip>
+                  </mat-chip-listbox>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+          
+          <mat-card-actions>
+            <button mat-raised-button color="primary" (click)="onApply(job)"
+                    aria-label="Aplicar a la oferta de trabajo">
+              <mat-icon>send</mat-icon>
+              Aplicar
+            </button>
+            <button mat-button (click)="onSave(job)"
+                    aria-label="Guardar oferta de trabajo">
+              <mat-icon>bookmark</mat-icon>
+              Guardar
+            </button>
+            <button mat-button (click)="onShare(job)"
+                    aria-label="Compartir oferta de trabajo">
+              <mat-icon>share</mat-icon>
+              Compartir
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+
+      <!-- No Results Message -->
+      <div *ngIf="filteredJobs.length === 0" class="no-results">
+        <mat-icon class="large-icon">search_off</mat-icon>
+        <h3>No se encontraron oportunidades</h3>
+        <p>Intenta ajustar tus filtros de búsqueda o explora otras opciones.</p>
+        <button mat-raised-button color="primary" (click)="clearFilters()"
+                aria-label="Ver todas las oportunidades disponibles">
+          <mat-icon>refresh</mat-icon>
+          Ver todas las oportunidades
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
