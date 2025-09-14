@@ -22,13 +22,15 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { VoiceToggleComponent } from './components/voice-toggle/voice-toggle.component';
+import { HighContrastToggleComponent } from './components/high-contrast-toggle/high-contrast-toggle.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     JobSearchComponent,
     ApplicationDialogComponent,
-    VoiceToggleComponent
+    VoiceToggleComponent,
+    HighContrastToggleComponent
   ],
   imports: [
     BrowserModule,

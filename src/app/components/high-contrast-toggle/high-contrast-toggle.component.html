@@ -1,0 +1,9 @@
+<button
+  mat-icon-button
+  [color]="isHighContrastEnabled ? 'accent' : 'primary'"
+  (click)="toggleHighContrast()"
+  [attr.aria-label]="isHighContrastEnabled ? 'Desactivar alto contraste' : 'Activar alto contraste'"
+  [matTooltip]="isHighContrastEnabled ? 'Desactivar alto contraste' : 'Activar alto contraste'"
+  class="high-contrast-toggle-button">
+  <mat-icon>{{ isHighContrastEnabled ? 'contrast' : 'visibility' }}</mat-icon>
+</button>

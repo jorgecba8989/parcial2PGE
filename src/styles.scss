@@ -70,3 +70,356 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--secondary-gradient);
 }
+
+// High Contrast Mode Styles
+body.high-contrast-mode {
+  // Override color variables for high contrast
+  --primary-gradient: #000000;
+  --secondary-gradient: #000000;
+  --success-gradient: #000000;
+  --warning-gradient: #000000;
+  --info-gradient: #000000;
+  --card-gradient: #FFFFFF;
+  --background-gradient: #FFFFFF;
+
+  // High contrast color palette
+  --color-primary: #000000;
+  --color-secondary: #000000;
+  --color-success: #000000;
+  --color-warning: #000000;
+  --color-info: #000000;
+  --color-light: #FFFFFF;
+  --color-dark: #000000;
+
+  // Force background and text colors
+  background: #FFFFFF !important;
+  color: #000000 !important;
+
+  // Material components high contrast overrides
+  .mat-toolbar {
+    background: #000000 !important;
+    color: #FFFFFF !important;
+    border: 3px solid #000000 !important;
+  }
+
+  .mat-card {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+    border: 3px solid #000000 !important;
+    box-shadow: none !important;
+
+    .mat-card-header {
+      background: #FFFFFF !important;
+      color: #000000 !important;
+      border-bottom: 2px solid #000000 !important;
+    }
+
+    .mat-card-title {
+      color: #000000 !important;
+      background: none !important;
+      -webkit-text-fill-color: #000000 !important;
+    }
+
+    .mat-card-subtitle {
+      color: #000000 !important;
+    }
+
+    .mat-card-content {
+      color: #000000 !important;
+    }
+  }
+
+  .mat-raised-button, .mat-fab, .mat-mini-fab {
+    background: #000000 !important;
+    color: #FFFFFF !important;
+    border: 3px solid #000000 !important;
+    box-shadow: none !important;
+
+    // Ensure text and icons are always visible
+    .mat-button-wrapper {
+      color: #FFFFFF !important;
+    }
+
+    mat-icon {
+      color: #FFFFFF !important;
+    }
+
+    span {
+      color: #FFFFFF !important;
+    }
+
+    &.mat-warn {
+      background: #FFFFFF !important;
+      color: #000000 !important;
+      border: 3px solid #000000 !important;
+
+      .mat-button-wrapper {
+        color: #000000 !important;
+      }
+
+      mat-icon {
+        color: #000000 !important;
+      }
+
+      span {
+        color: #000000 !important;
+      }
+    }
+
+    &.mat-primary {
+      background: #000000 !important;
+      color: #FFFFFF !important;
+      border: 3px solid #000000 !important;
+
+      .mat-button-wrapper {
+        color: #FFFFFF !important;
+      }
+
+      mat-icon {
+        color: #FFFFFF !important;
+      }
+
+      span {
+        color: #FFFFFF !important;
+      }
+    }
+  }
+
+  // Comprehensive fix for ALL Angular Material buttons
+  .mdc-button, .mat-mdc-button, .mat-mdc-raised-button, .mat-mdc-outlined-button,
+  .mat-mdc-unelevated-button, .mat-raised-button, .mat-flat-button, .mat-stroked-button,
+  button[mat-raised-button], button[mat-flat-button], button[mat-stroked-button],
+  button[mat-button], button[mat-icon-button] {
+    background: #000000 !important;
+    color: #FFFFFF !important;
+    border: 3px solid #000000 !important;
+
+    // All internal text elements
+    .mdc-button__label, .mat-button-wrapper, .mat-mdc-button-touch-target,
+    .mdc-button__ripple, span, div {
+      color: #FFFFFF !important;
+      background: transparent !important;
+    }
+
+    // Icons inside buttons
+    .mat-icon, mat-icon, i, .material-icons {
+      color: #FFFFFF !important;
+    }
+
+    // Warn buttons (red/orange ones)
+    &.mat-warn, &[color="warn"] {
+      background: #FFFFFF !important;
+      color: #000000 !important;
+      border: 3px solid #000000 !important;
+
+      .mdc-button__label, .mat-button-wrapper, .mat-mdc-button-touch-target,
+      .mdc-button__ripple, span, div {
+        color: #000000 !important;
+      }
+
+      .mat-icon, mat-icon, i, .material-icons {
+        color: #000000 !important;
+      }
+    }
+
+    // Primary buttons
+    &.mat-primary, &[color="primary"] {
+      background: #000000 !important;
+      color: #FFFFFF !important;
+      border: 3px solid #000000 !important;
+
+      .mdc-button__label, .mat-button-wrapper, .mat-mdc-button-touch-target,
+      .mdc-button__ripple, span, div {
+        color: #FFFFFF !important;
+      }
+
+      .mat-icon, mat-icon, i, .material-icons {
+        color: #FFFFFF !important;
+      }
+    }
+
+    // Accent buttons
+    &.mat-accent, &[color="accent"] {
+      background: #000000 !important;
+      color: #FFFFFF !important;
+      border: 3px solid #000000 !important;
+
+      .mdc-button__label, .mat-button-wrapper, .mat-mdc-button-touch-target,
+      .mdc-button__ripple, span, div {
+        color: #FFFFFF !important;
+      }
+
+      .mat-icon, mat-icon, i, .material-icons {
+        color: #FFFFFF !important;
+      }
+    }
+  }
+
+  .mat-icon-button {
+    color: #FFFFFF !important;
+    background: #000000 !important;
+    border: 2px solid #FFFFFF !important;
+
+    mat-icon {
+      color: #FFFFFF !important;
+    }
+
+    span {
+      color: #FFFFFF !important;
+    }
+  }
+
+  .mat-form-field {
+    .mat-mdc-form-field-focus-overlay {
+      background: transparent !important;
+    }
+
+    .mat-mdc-text-field-wrapper {
+      background: #FFFFFF !important;
+      border: 3px solid #000000 !important;
+    }
+
+    .mat-mdc-form-field-label {
+      color: #000000 !important;
+    }
+
+    input, textarea {
+      color: #000000 !important;
+      background: #FFFFFF !important;
+    }
+  }
+
+  .mat-select {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+    border: 3px solid #000000 !important;
+  }
+
+  .mat-checkbox {
+    .mat-checkbox-frame {
+      border: 3px solid #000000 !important;
+    }
+
+    .mat-checkbox-background {
+      background: #000000 !important;
+    }
+
+    .mat-checkbox-label {
+      color: #000000 !important;
+    }
+  }
+
+  .mat-chip, .mat-mdc-chip, .mdc-chip {
+    background: #000000 !important;
+    color: #FFFFFF !important;
+    border: 2px solid #000000 !important;
+
+    // Chip text
+    .mat-chip-list-wrapper, .mdc-chip__text, .mat-mdc-chip-action-label {
+      color: #FFFFFF !important;
+    }
+
+    // Selected chips
+    &.mat-chip-selected, &.mdc-chip--selected {
+      background: #000000 !important;
+      color: #FFFFFF !important;
+    }
+  }
+
+  // Custom high contrast styles
+  .job-meta .meta-item {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+    border: 3px solid #000000 !important;
+  }
+
+  .job-description {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+    border: 3px solid #000000 !important;
+    border-left: 6px solid #000000 !important;
+  }
+
+  .accessibility-features h4 {
+    color: #000000 !important;
+
+    &::before {
+      background: #000000 !important;
+      color: #FFFFFF !important;
+    }
+  }
+
+  .results-header h2 {
+    background: #000000 !important;
+    color: #FFFFFF !important;
+    border: 3px solid #000000 !important;
+  }
+
+  // Remove all transitions and animations
+  *, *::before, *::after {
+    transition: none !important;
+    animation: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    background-image: none !important;
+  }
+
+  // Additional text fixes for all elements
+  h1, h2, h3, h4, h5, h6, p, span, div, label {
+    color: #000000 !important;
+  }
+
+  // Ensure toolbar text is white
+  .mat-toolbar {
+    h1, h2, h3, h4, h5, h6, p, span, div {
+      color: #FFFFFF !important;
+    }
+  }
+
+  // FORCE all button text to be visible - nuclear option
+  button * {
+    color: inherit !important;
+  }
+
+  // Force visibility for all Material Design components
+  .mat-button-wrapper,
+  .mdc-button__label,
+  .mat-mdc-button-touch-target,
+  .mdc-button__ripple {
+    color: inherit !important;
+    opacity: 1 !important;
+  }
+
+  // Specific overrides for problematic elements
+  .mat-raised-button *,
+  .mat-flat-button *,
+  .mat-stroked-button *,
+  .mdc-button *,
+  .mat-mdc-button * {
+    color: inherit !important;
+    opacity: 1 !important;
+  }
+
+  // Force chip text visibility
+  mat-chip-listbox mat-chip *,
+  .mat-chip-listbox .mat-chip * {
+    color: inherit !important;
+  }
+
+  // High contrast focus indicators
+  *:focus {
+    outline: 4px solid #000000 !important;
+    outline-offset: 2px !important;
+  }
+
+  // Scrollbar high contrast
+  ::-webkit-scrollbar-track {
+    background: #FFFFFF !important;
+    border: 2px solid #000000 !important;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #000000 !important;
+    border: 2px solid #FFFFFF !important;
+  }
+}
