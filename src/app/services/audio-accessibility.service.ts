@@ -6,9 +6,11 @@ import { Injectable } from '@angular/core';
 export class AudioAccessibilityService {
   private synth = window.speechSynthesis;
   private audioContext: AudioContext | null = null;
+  private isVoiceEnabled: boolean = true;
 
   constructor() {
     this.initAudioContext();
+    this.loadVoicePreference();
   }
 
   private initAudioContext() {
@@ -69,9 +71,31 @@ export class AudioAccessibilityService {
     });
   }
 
+  private loadVoicePreference() {
+    const saved = localStorage.getItem('voiceEnabled');
+    this.isVoiceEnabled = saved !== null ? saved === 'true' : true;
+  }
+
+  private saveVoicePreference() {
+    localStorage.setItem('voiceEnabled', this.isVoiceEnabled.toString());
+  }
+
+  toggleVoice(): boolean {
+    this.isVoiceEnabled = !this.isVoiceEnabled;
+    this.saveVoicePreference();
+    if (!this.isVoiceEnabled) {
+      this.stopSpeaking();
+    }
+    return this.isVoiceEnabled;
+  }
+
+  isVoiceActive(): boolean {
+    return this.isVoiceEnabled;
+  }
+
   // Anuncios de voz
   speak(text: string, options?: { rate?: number, pitch?: number, volume?: number }) {
-    if (!this.synth) return;
+    if (!this.synth || !this.isVoiceEnabled) return;
 
     const utterance = new SpeechSynthesisUtterance(text);
 

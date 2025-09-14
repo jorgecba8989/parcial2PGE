@@ -20,12 +20,15 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { VoiceToggleComponent } from './components/voice-toggle/voice-toggle.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     JobSearchComponent,
-    ApplicationDialogComponent
+    ApplicationDialogComponent,
+    VoiceToggleComponent
   ],
   imports: [
     BrowserModule,
@@ -44,7 +47,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatGridListModule,
     MatCheckboxModule,
     MatDialogModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatTooltipModule
   ],
   providers: [],
   bootstrap: [AppComponent]

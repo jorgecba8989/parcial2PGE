@@ -1,0 +1,9 @@
+<button
+  mat-icon-button
+  [color]="isVoiceEnabled ? 'primary' : 'warn'"
+  (click)="toggleVoice()"
+  [attr.aria-label]="isVoiceEnabled ? 'Desactivar voz' : 'Activar voz'"
+  [matTooltip]="isVoiceEnabled ? 'Desactivar voz' : 'Activar voz'"
+  class="voice-toggle-button">
+  <mat-icon>{{ isVoiceEnabled ? 'volume_up' : 'volume_off' }}</mat-icon>
+</button>

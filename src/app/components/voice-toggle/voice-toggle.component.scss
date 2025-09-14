@@ -1,0 +1,21 @@
+.voice-toggle-button {
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+
+  mat-icon {
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+  }
+}
+
+.voice-toggle-button[color="primary"] {
+  background-color: rgba(63, 81, 181, 0.1);
+}
+
+.voice-toggle-button[color="warn"] {
+  background-color: rgba(244, 67, 54, 0.1);
+}

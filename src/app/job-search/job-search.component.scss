@@ -38,16 +38,22 @@ mat-toolbar {
   color: white !important;
   box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
   border-radius: 0 0 15px 15px;
-  
+  display: flex;
+  align-items: center;
+
   mat-icon {
     margin-right: 12px;
     filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
   }
-  
+
   span {
     font-weight: 600;
     font-size: 1.3rem;
     text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+
+    &.spacer {
+      flex: 1;
+    }
   }
 }
 
