@@ -3,18 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { AudioAccessibilityService } from '../services/audio-accessibility.service';
 import { ApplicationDialogComponent } from '../components/application-dialog/application-dialog.component';
-
-interface Job {
-  id: number;
-  title: string;
-  company: string;
-  location: string;
-  type: string;
-  description: string;
-  accessibility: string[];
-  remote: boolean;
-  salary?: string;
-}
+import { JobsService, Job } from '../services/jobs.service';
 
 @Component({
   selector: 'app-job-search',
@@ -40,7 +29,8 @@ export class JobSearchComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private audioService: AudioAccessibilityService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private jobsService: JobsService
   ) {
     this.searchForm = this.fb.group({
       searchTerm: ['', [Validators.minLength(2)]],
@@ -52,18 +42,33 @@ export class JobSearchComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadSampleJobs();
-    this.filteredJobs = this.jobs;
-    
+    this.loadJobsFromFirestore();
+
     this.searchForm.valueChanges.subscribe(() => {
       this.filterJobs();
     });
   }
 
-  loadSampleJobs(): void {
+  loadJobsFromFirestore(): void {
+    this.jobsService.getJobs().subscribe({
+      next: (jobs) => {
+        this.jobs = jobs;
+        this.filteredJobs = jobs;
+        console.log('Trabajos cargados desde Firestore:', jobs.length);
+      },
+      error: (error) => {
+        console.error('Error cargando trabajos:', error);
+        // Fallback a datos de ejemplo si Firebase falla
+        this.loadSampleJobsAsFallback();
+      }
+    });
+  }
+
+  // Método de respaldo si Firebase no está configurado
+  loadSampleJobsAsFallback(): void {
+    console.log('Usando datos de ejemplo como respaldo');
     this.jobs = [
       {
-        id: 1,
         title: 'Desarrollador Frontend',
         company: 'TechInclusiva S.A.',
         location: 'Buenos Aires, Argentina',
@@ -72,53 +77,11 @@ export class JobSearchComponent implements OnInit {
         accessibility: ['Trabajo remoto', 'Horarios flexibles', 'Tecnología asistiva'],
         remote: true,
         salary: '$80.000 - $120.000'
-      },
-      {
-        id: 2,
-        title: 'Asistente Administrativo',
-        company: 'Inclusión Total',
-        location: 'Córdoba, Argentina',
-        type: 'Medio tiempo',
-        description: 'Posición administrativa en empresa líder en inclusión laboral.',
-        accessibility: ['Acceso para sillas de ruedas', 'Horarios flexibles'],
-        remote: false,
-        salary: '$45.000 - $60.000'
-      },
-      {
-        id: 3,
-        title: 'Diseñador UX/UI',
-        company: 'Diversidad Digital',
-        location: 'Rosario, Argentina',
-        type: 'Freelance',
-        description: 'Diseñador con experiencia en accesibilidad web y diseño inclusivo.',
-        accessibility: ['Trabajo remoto', 'Apoyo visual', 'Tecnología asistiva'],
-        remote: true,
-        salary: '$60.000 - $90.000'
-      },
-      {
-        id: 4,
-        title: 'Contador Público',
-        company: 'Finanzas Accesibles',
-        location: 'Mendoza, Argentina',
-        type: 'Tiempo completo',
-        description: 'Contador con experiencia en sistemas contables accesibles.',
-        accessibility: ['Intérprete de señas', 'Apoyo auditivo', 'Horarios flexibles'],
-        remote: false,
-        salary: '$70.000 - $95.000'
-      },
-      {
-        id: 5,
-        title: 'Especialista en Marketing',
-        company: 'Comunicación Inclusiva',
-        location: 'La Plata, Argentina',
-        type: 'Tiempo completo',
-        description: 'Marketing especializado en campañas de diversidad e inclusión.',
-        accessibility: ['Trabajo remoto', 'Horarios flexibles', 'Apoyo visual'],
-        remote: true,
-        salary: '$65.000 - $85.000'
       }
     ];
+    this.filteredJobs = this.jobs;
   }
+
 
   filterJobs(): void {
     const formValue = this.searchForm.value;
