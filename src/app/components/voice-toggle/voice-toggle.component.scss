@@ -12,8 +12,8 @@
   }
 }
 
-.voice-toggle-button[color="primary"] {
-  background-color: rgba(63, 81, 181, 0.1);
+::ng-deep .mat-mdc-icon-button.mat-success {
+  color: #23e223 !important;
 }
 
 .voice-toggle-button[color="warn"] {
