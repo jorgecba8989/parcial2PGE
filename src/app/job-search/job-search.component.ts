@@ -39,7 +39,8 @@ export class JobSearchComponent implements OnInit {
       location: ['', [Validators.minLength(2)]],
       jobType: [''],
       accessibility: [''],
-      remoteOnly: [false]
+      remoteOnly: [false],
+      showAppliedOnly: [false]
     });
   }
 
@@ -101,7 +102,9 @@ export class JobSearchComponent implements OnInit {
 
       const matchesRemote = !formValue.remoteOnly || job.remote;
 
-      return matchesSearch && matchesLocation && matchesType && matchesAccessibility && matchesRemote;
+      const matchesAppliedFilter = !formValue.showAppliedOnly || this.hasAppliedToJob(job.id!);
+
+      return matchesSearch && matchesLocation && matchesType && matchesAccessibility && matchesRemote && matchesAppliedFilter;
     });
 
     // Anunciar resultados de búsqueda

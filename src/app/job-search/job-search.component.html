@@ -55,9 +55,15 @@
           </div>
 
           <div class="form-actions">
-            <mat-checkbox formControlName="remoteOnly" color="primary">
-              Solo trabajos remotos
-            </mat-checkbox>
+            <div class="checkboxes-container">
+              <mat-checkbox formControlName="remoteOnly" color="primary">
+                Solo trabajos remotos
+              </mat-checkbox>
+
+              <mat-checkbox formControlName="showAppliedOnly" color="primary">
+                Email aplicados
+              </mat-checkbox>
+            </div>
 
             <div class="action-buttons">
               <button mat-raised-button color="primary" type="button" (click)="onSearch()"

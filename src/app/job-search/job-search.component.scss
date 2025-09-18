@@ -108,16 +108,22 @@ mat-toolbar {
     align-items: center;
     margin-top: 20px;
 
+    .checkboxes-container {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
     .action-buttons {
       display: flex;
       gap: 12px;
     }
-    
+
     mat-checkbox {
       ::ng-deep .mat-checkbox-frame {
         border-color: var(--color-primary);
       }
-      
+
       ::ng-deep .mat-checkbox-checked .mat-checkbox-background {
         background: var(--secondary-gradient);
       }
