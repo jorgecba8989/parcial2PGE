@@ -458,9 +458,147 @@ mat-form-field {
 @media (prefers-reduced-motion: reduce) {
   .job-card {
     transition: none;
-    
+
     &:hover {
       transform: none;
     }
+  }
+}
+
+// **ESTILOS PARA APLICACIONES ENVIADAS**
+
+// Estilo para trabajos a los que ya aplicó
+.applied-job {
+  border: 2px solid #4caf50 !important;
+  background: linear-gradient(135deg, #e8f5e8 0%, #f1f8e9 100%) !important;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #4caf50, #66bb6a) !important;
+    border-radius: 4px 4px 0 0;
+    transform: scaleX(1) !important;
+  }
+
+  // Efecto de resplandor suave
+  box-shadow:
+    0 8px 32px rgba(76, 175, 80, 0.25),
+    0 4px 16px rgba(76, 175, 80, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5) !important;
+
+  &:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow:
+      0 20px 40px rgba(76, 175, 80, 0.3),
+      0 10px 25px rgba(76, 175, 80, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.6) !important;
+  }
+}
+
+// Mensaje de correo enviado
+.applied-message {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #e8f5e8, #f1f8e9);
+  border: 1px solid #4caf50;
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  color: #2e7d32;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, #4caf50, #66bb6a, #4caf50);
+    animation: shimmer 2s infinite;
+  }
+
+  mat-icon {
+    font-size: 22px;
+    width: 22px;
+    height: 22px;
+    color: #4caf50;
+    filter: drop-shadow(0 2px 4px rgba(76, 175, 80, 0.3));
+  }
+
+  span {
+    font-size: 0.95rem;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
+  }
+}
+
+// Animación para el botón aplicado
+button[disabled] {
+  &[color="accent"] {
+    background: linear-gradient(135deg, #4caf50, #66bb6a) !important;
+    color: white !important;
+    cursor: not-allowed;
+    opacity: 0.9;
+
+    mat-icon {
+      animation: checkPulse 2s infinite;
+    }
+  }
+}
+
+// Animaciones
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes checkPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+// Animación cuando se aplica por primera vez
+.applied-job {
+  animation: applySuccess 0.8s ease-out;
+}
+
+@keyframes applySuccess {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  25% {
+    transform: scale(1.05);
+    box-shadow: 0 15px 30px rgba(76, 175, 80, 0.4);
+  }
+  50% {
+    transform: scale(1.02);
+    box-shadow: 0 20px 40px rgba(76, 175, 80, 0.3);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 8px 32px rgba(76, 175, 80, 0.25);
   }
 }

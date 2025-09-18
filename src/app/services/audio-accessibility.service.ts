@@ -147,10 +147,9 @@ export class AudioAccessibilityService {
   announceAction(action: string) {
     const messages = {
       'apply': 'Aplicando a la oferta de trabajo',
-      'save': 'Guardando oferta de trabajo',
-      'share': 'Compartiendo oferta de trabajo',
       'search': 'Buscando oportunidades de trabajo',
-      'clear': 'Limpiando filtros de búsqueda'
+      'clear': 'Limpiando filtros de búsqueda',
+      'already_applied': 'Ya aplicaste a esta oferta de trabajo'
     };
 
     const message = messages[action as keyof typeof messages] || action;

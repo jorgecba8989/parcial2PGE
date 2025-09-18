@@ -85,7 +85,9 @@
 
       <!-- Job Cards -->
       <div class="job-grid">
-        <mat-card *ngFor="let job of filteredJobs" class="job-card">
+        <mat-card *ngFor="let job of filteredJobs"
+                  class="job-card"
+                  [ngClass]="{'applied-job': hasAppliedToJob(job.id!)}">
           <mat-card-header>
             <mat-card-title>{{ job.title }}</mat-card-title>
             <mat-card-subtitle>
@@ -97,6 +99,12 @@
           </mat-card-header>
           
           <mat-card-content>
+            <!-- Mensaje de aplicación enviada -->
+            <div *ngIf="hasAppliedToJob(job.id!)" class="applied-message">
+              <mat-icon color="primary">check_circle</mat-icon>
+              <span>Correo enviado</span>
+            </div>
+
             <div class="job-details">
               <div class="job-meta">
                 <div class="meta-item">
@@ -136,20 +144,13 @@
           </mat-card-content>
           
           <mat-card-actions>
-            <button mat-raised-button color="primary" (click)="onApply(job)"
+            <button mat-raised-button
+                    [color]="hasAppliedToJob(job.id!) ? 'accent' : 'primary'"
+                    (click)="onApply(job)"
+                    [disabled]="hasAppliedToJob(job.id!)"
                     aria-label="Aplicar a la oferta de trabajo">
-              <mat-icon>send</mat-icon>
-              Aplicar
-            </button>
-            <button mat-button (click)="onSave(job)"
-                    aria-label="Guardar oferta de trabajo">
-              <mat-icon>bookmark</mat-icon>
-              Guardar
-            </button>
-            <button mat-button (click)="onShare(job)"
-                    aria-label="Compartir oferta de trabajo">
-              <mat-icon>share</mat-icon>
-              Compartir
+              <mat-icon>{{ hasAppliedToJob(job.id!) ? 'check' : 'send' }}</mat-icon>
+              {{ hasAppliedToJob(job.id!) ? 'Aplicado' : 'Aplicar' }}
             </button>
           </mat-card-actions>
         </mat-card>

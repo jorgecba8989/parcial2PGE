@@ -14,6 +14,8 @@ export class JobSearchComponent implements OnInit {
   searchForm: FormGroup;
   jobs: Job[] = [];
   filteredJobs: Job[] = [];
+  appliedJobs: Set<string> = new Set(); // IDs de trabajos aplicados
+  currentUserEmail = 'usuario@example.com'; // Simular usuario (después será real)
   
   jobTypes = ['Tiempo completo', 'Medio tiempo', 'Por horas', 'Freelance'];
   accessibilityOptions = [
@@ -43,10 +45,7 @@ export class JobSearchComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadJobsFromFirestore();
-
-    this.searchForm.valueChanges.subscribe(() => {
-      this.filterJobs();
-    });
+    this.loadUserApplications();
   }
 
   loadJobsFromFirestore(): void {
@@ -116,6 +115,12 @@ export class JobSearchComponent implements OnInit {
   }
 
   onApply(job: Job): void {
+    // Verificar si ya aplicó
+    if (this.hasAppliedToJob(job.id!)) {
+      this.audioService.announceAction('already_applied');
+      return;
+    }
+
     const dialogRef = this.dialog.open(ApplicationDialogComponent, {
       width: '600px',
       maxWidth: '95vw',
@@ -127,20 +132,50 @@ export class JobSearchComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        // Aplicación enviada exitosamente
-        console.log('Aplicación enviada:', result);
-        // Aquí puedes manejar la lógica de envío real
+        // Enviar aplicación a Firebase
+        this.submitApplication(job, result);
       }
     });
   }
 
-  onSave(job: Job): void {
-    this.audioService.announceAction('save');
+  // Enviar aplicación a Firebase
+  submitApplication(job: Job, applicationData: any): void {
+    this.jobsService.applyToJob(
+      job.id!,
+      this.currentUserEmail,
+      applicationData.name || 'Usuario'
+    ).subscribe({
+      next: (applicationId) => {
+        console.log('Aplicación enviada con ID:', applicationId);
+        this.appliedJobs.add(job.id!);
+        this.audioService.announceAction('apply');
+      },
+      error: (error) => {
+        console.error('Error enviando aplicación:', error);
+      }
+    });
   }
 
-  onShare(job: Job): void {
-    this.audioService.announceAction('share');
+  // Cargar aplicaciones del usuario
+  loadUserApplications(): void {
+    this.jobsService.getUserApplications(this.currentUserEmail).subscribe({
+      next: (applications) => {
+        this.appliedJobs.clear();
+        applications.forEach(app => {
+          this.appliedJobs.add(app.jobId);
+        });
+      },
+      error: (error) => {
+        console.error('Error cargando aplicaciones:', error);
+      }
+    });
   }
+
+  // Verificar si ya aplicó a un trabajo
+  hasAppliedToJob(jobId: string): boolean {
+    return this.appliedJobs.has(jobId);
+  }
+
 
   onSearch(): void {
     if (this.searchForm.valid) {
