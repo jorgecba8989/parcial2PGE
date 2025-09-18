@@ -164,7 +164,6 @@ export class JobSearchComponent implements OnInit {
 
   // Enviar aplicación a Firebase
   submitApplication(job: Job, applicationData: any): void {
-    this.isLoading = true;
     this.jobsService.applyToJob(
       job.id!,
       this.currentUserEmail,
@@ -174,11 +173,9 @@ export class JobSearchComponent implements OnInit {
         console.log('Aplicación enviada con ID:', applicationId);
         this.appliedJobs.add(job.id!);
         this.audioService.announceAction('apply');
-        this.isLoading = false;
       },
       error: (error) => {
         console.error('Error enviando aplicación:', error);
-        this.isLoading = false;
       }
     });
   }
