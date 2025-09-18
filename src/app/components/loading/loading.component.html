@@ -1,0 +1,13 @@
+<div class="loading-overlay" *ngIf="isVisible">
+  <div class="loading-container">
+    <div class="ubp-letters">
+      <span
+        class="letter"
+        *ngFor="let letter of letters; let i = index"
+        [style.animation-delay]="i * 0.6 + 's'">
+        {{ letter }}
+      </span>
+    </div>
+    <div class="loading-message">{{ message }}</div>
+  </div>
+</div>

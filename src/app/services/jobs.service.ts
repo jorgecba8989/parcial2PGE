@@ -24,7 +24,6 @@ export interface JobApplication {
   userEmail: string;
   userName?: string;
   appliedAt: any;
-  status: 'enviada' | 'vista' | 'en_proceso' | 'rechazada' | 'aceptada';
 }
 
 @Injectable({
@@ -67,8 +66,7 @@ export class JobsService {
       jobId,
       userEmail,
       userName,
-      appliedAt: new Date(),
-      status: 'enviada'
+      appliedAt: new Date()
     };
 
     return from(addDoc(applicationsCollection, applicationData)).pipe(

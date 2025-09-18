@@ -23,6 +23,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { VoiceToggleComponent } from './components/voice-toggle/voice-toggle.component';
 import { HighContrastToggleComponent } from './components/high-contrast-toggle/high-contrast-toggle.component';
+import { LoadingComponent } from './components/loading/loading.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { HighContrastToggleComponent } from './components/high-contrast-toggle/h
     JobSearchComponent,
     ApplicationDialogComponent,
     VoiceToggleComponent,
-    HighContrastToggleComponent
+    HighContrastToggleComponent,
+    LoadingComponent
   ],
   imports: [
     BrowserModule,

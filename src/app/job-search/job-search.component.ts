@@ -16,6 +16,7 @@ export class JobSearchComponent implements OnInit {
   filteredJobs: Job[] = [];
   appliedJobs: Set<string> = new Set(); // IDs de trabajos aplicados
   currentUserEmail = 'usuario@example.com'; // Simular usuario (después será real)
+  isLoading: boolean = false;
   
   jobTypes = ['Tiempo completo', 'Medio tiempo', 'Por horas', 'Freelance'];
   accessibilityOptions = [
@@ -50,16 +51,36 @@ export class JobSearchComponent implements OnInit {
   }
 
   loadJobsFromFirestore(): void {
+    this.isLoading = true;
+    const minLoadingTime = 4000; // 4 segundos mínimo para ver toda la animación
+    const startTime = Date.now();
+
     this.jobsService.getJobs().subscribe({
       next: (jobs) => {
         this.jobs = jobs;
         this.filteredJobs = jobs;
         console.log('Trabajos cargados desde Firestore:', jobs.length);
+
+        // Calcular tiempo transcurrido y esperar si es necesario
+        const elapsedTime = Date.now() - startTime;
+        const remainingTime = Math.max(0, minLoadingTime - elapsedTime);
+
+        setTimeout(() => {
+          this.isLoading = false;
+        }, remainingTime);
       },
       error: (error) => {
         console.error('Error cargando trabajos:', error);
         // Fallback a datos de ejemplo si Firebase falla
         this.loadSampleJobsAsFallback();
+
+        // Mantener tiempo mínimo también en caso de error
+        const elapsedTime = Date.now() - startTime;
+        const remainingTime = Math.max(0, minLoadingTime - elapsedTime);
+
+        setTimeout(() => {
+          this.isLoading = false;
+        }, remainingTime);
       }
     });
   }
@@ -143,6 +164,7 @@ export class JobSearchComponent implements OnInit {
 
   // Enviar aplicación a Firebase
   submitApplication(job: Job, applicationData: any): void {
+    this.isLoading = true;
     this.jobsService.applyToJob(
       job.id!,
       this.currentUserEmail,
@@ -152,9 +174,11 @@ export class JobSearchComponent implements OnInit {
         console.log('Aplicación enviada con ID:', applicationId);
         this.appliedJobs.add(job.id!);
         this.audioService.announceAction('apply');
+        this.isLoading = false;
       },
       error: (error) => {
         console.error('Error enviando aplicación:', error);
+        this.isLoading = false;
       }
     });
   }
