@@ -16,6 +16,7 @@ export class JobSearchComponent implements OnInit {
   filteredJobs: Job[] = [];
   appliedJobs: Set<string> = new Set(); // IDs de trabajos aplicados
   currentUserEmail = 'usuario@example.com'; // Simular usuario (después será real)
+  appliedJobsDetails: Map<string, string> = new Map(); // jobId -> email usado
   isLoading: boolean = false;
   
   jobTypes = ['Tiempo completo', 'Medio tiempo', 'Por horas', 'Freelance'];
@@ -155,23 +156,38 @@ export class JobSearchComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
+      console.log('Diálogo cerrado con resultado:', result);
       if (result) {
         // Enviar aplicación a Firebase
         this.submitApplication(job, result);
+      } else {
+        console.log('Aplicación cancelada');
       }
     });
   }
 
   // Enviar aplicación a Firebase
   submitApplication(job: Job, applicationData: any): void {
+    console.log('INICIANDO submitApplication:');
+    console.log('Job:', job);
+    console.log('ApplicationData:', applicationData);
+
     this.jobsService.applyToJob(
       job.id!,
-      this.currentUserEmail,
-      applicationData.name || 'Usuario'
+      applicationData.toEmail, // Email real del formulario
+      `${job.title} - ${job.company}`, // Nombre del puesto y empresa
+      applicationData.message, // Mensaje del formulario
+      applicationData.attachmentFile // Archivo adjunto si existe
     ).subscribe({
       next: (applicationId) => {
         console.log('Aplicación enviada con ID:', applicationId);
+        console.log('Email enviado a:', applicationData.toEmail);
+        console.log('Puesto:', `${job.title} - ${job.company}`);
+        console.log('Mensaje:', applicationData.message);
+        console.log('Archivo adjunto:', applicationData.attachmentFile?.name || 'Sin archivo');
+        // Marcar como aplicado inmediatamente
         this.appliedJobs.add(job.id!);
+        this.appliedJobsDetails.set(job.id!, applicationData.toEmail);
         this.audioService.announceAction('apply');
       },
       error: (error) => {
@@ -182,12 +198,22 @@ export class JobSearchComponent implements OnInit {
 
   // Cargar aplicaciones del usuario
   loadUserApplications(): void {
-    this.jobsService.getUserApplications(this.currentUserEmail).subscribe({
+    // Cargar TODAS las aplicaciones para mostrar cualquier email usado
+    this.jobsService.getAllUserApplications().subscribe({
       next: (applications) => {
         this.appliedJobs.clear();
+        this.appliedJobsDetails.clear();
         applications.forEach(app => {
           this.appliedJobs.add(app.jobId);
+          this.appliedJobsDetails.set(app.jobId, app.userEmail);
+          console.log('Aplicación encontrada:', {
+            puesto: app.userName,
+            email: app.userEmail,
+            mensaje: app.message,
+            archivo: app.attachmentName || 'Sin archivo'
+          });
         });
+        console.log(`Total aplicaciones cargadas: ${applications.length}`);
       },
       error: (error) => {
         console.error('Error cargando aplicaciones:', error);
