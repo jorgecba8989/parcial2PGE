@@ -2,7 +2,6 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AudioAccessibilityService } from '../../services/audio-accessibility.service';
-import { EmailService } from '../../services/email.service';
 
 
 @Component({
@@ -20,7 +19,6 @@ export class ApplicationDialogComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private audioService: AudioAccessibilityService,
-    private emailService: EmailService,
     public dialogRef: MatDialogRef<ApplicationDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data?: any
   ) {
@@ -31,8 +29,8 @@ export class ApplicationDialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Anunciar que se abrió el diálogo de envío de email
-    this.audioService.speak('Formulario de envío de email abierto');
+    // Anunciar que se abrió el diálogo de aplicación
+    this.audioService.speak('Formulario de aplicación abierto');
   }
 
   onFileSelected(event: Event): void {
@@ -68,33 +66,22 @@ export class ApplicationDialogComponent implements OnInit {
     }
   }
 
-  async onSubmit(): Promise<void> {
+  onSubmit(): void {
     if (this.applicationForm.valid) {
       const toEmail = this.applicationForm.value.toEmail;
       const message = this.applicationForm.value.message;
 
       // Activar estado de loading
       this.isLoading = true;
-      this.audioService.speak('Enviando email...');
+      this.audioService.speak('Procesando aplicación...');
       this.audioService.playConfirmationSound();
 
-      try {
-        // Llamar al servicio de email
-        const success = await this.emailService.sendEmail(toEmail, message, this.selectedFile || undefined);
-
-        if (success) {
-          this.audioService.speak('Email enviado exitosamente');
-          this.audioService.playSuccessSound();
-          this.dialogRef.close({ toEmail, message, attachmentFile: this.selectedFile });
-        } else {
-          this.audioService.speak('Error al enviar el email. Por favor, inténtalo de nuevo.');
-          this.isLoading = false;
-        }
-      } catch (error) {
-        console.error('Error al enviar email:', error);
-        this.audioService.speak('Error al enviar el email. Por favor, verifica tu conexión e inténtalo de nuevo.');
-        this.isLoading = false;
-      }
+      // Simular un breve delay para mejor UX
+      setTimeout(() => {
+        this.audioService.speak('Aplicación preparada exitosamente');
+        this.audioService.playSuccessSound();
+        this.dialogRef.close({ toEmail, message, attachmentFile: this.selectedFile });
+      }, 1000);
 
     } else {
       // Verificar errores y anunciarlos
@@ -103,7 +90,7 @@ export class ApplicationDialogComponent implements OnInit {
   }
 
   onCancel(): void {
-    this.audioService.speak('Envío de email cancelado');
+    this.audioService.speak('Aplicación cancelada');
     this.dialogRef.close();
   }
 

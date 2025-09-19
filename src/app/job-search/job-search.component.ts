@@ -156,22 +156,15 @@ export class JobSearchComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('Diálogo cerrado con resultado:', result);
       if (result) {
         // Enviar aplicación a Firebase
         this.submitApplication(job, result);
-      } else {
-        console.log('Aplicación cancelada');
       }
     });
   }
 
   // Enviar aplicación a Firebase
   submitApplication(job: Job, applicationData: any): void {
-    console.log('INICIANDO submitApplication:');
-    console.log('Job:', job);
-    console.log('ApplicationData:', applicationData);
-
     this.jobsService.applyToJob(
       job.id!,
       applicationData.toEmail, // Email real del formulario
@@ -181,10 +174,6 @@ export class JobSearchComponent implements OnInit {
     ).subscribe({
       next: (applicationId) => {
         console.log('Aplicación enviada con ID:', applicationId);
-        console.log('Email enviado a:', applicationData.toEmail);
-        console.log('Puesto:', `${job.title} - ${job.company}`);
-        console.log('Mensaje:', applicationData.message);
-        console.log('Archivo adjunto:', applicationData.attachmentFile?.name || 'Sin archivo');
         // Marcar como aplicado inmediatamente
         this.appliedJobs.add(job.id!);
         this.appliedJobsDetails.set(job.id!, applicationData.toEmail);

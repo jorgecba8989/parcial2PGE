@@ -71,13 +71,6 @@ export class JobsService {
     message?: string,
     attachmentFile?: File
   ): Observable<string> {
-    console.log('=== SERVICIO applyToJob ===');
-    console.log('jobId:', jobId);
-    console.log('userEmail:', userEmail);
-    console.log('userName:', userName);
-    console.log('message:', message);
-    console.log('attachmentFile:', attachmentFile);
-
     const applicationsCollection = collection(this.db, 'job_applications');
     const applicationData: JobApplication = {
       jobId,
@@ -90,20 +83,10 @@ export class JobsService {
       appliedAt: new Date()
     };
 
-    console.log('Datos a enviar a Firebase:', applicationData);
-
     return from(addDoc(applicationsCollection, applicationData)).pipe(
-      map(docRef => {
-        console.log('✅ Documento creado exitosamente con ID:', docRef.id);
-        return docRef.id;
-      }),
+      map(docRef => docRef.id),
       catchError(error => {
-        console.error('❌ Error al crear documento en Firebase:', error);
-        console.error('Detalles del error:', {
-          code: error.code,
-          message: error.message,
-          customData: error.customData
-        });
+        console.error('Error al enviar aplicación a Firebase:', error);
         throw error;
       })
     );
