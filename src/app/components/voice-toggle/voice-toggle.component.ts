@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { AudioAccessibilityService } from '../../services/audio-accessibility.service';
 
 @Component({
@@ -22,4 +22,12 @@ export class VoiceToggleComponent {
       this.audioService.speak(message);
     }
   }
+
+    @HostListener('window:keydown', ['$event'])
+    handleKeyboardEvent(event: KeyboardEvent) {
+      if (event.altKey && event.code === 'KeyS') {
+        event.preventDefault();
+        this.toggleVoice();
+      }
+    }
 }

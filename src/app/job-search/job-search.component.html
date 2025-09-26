@@ -24,14 +24,20 @@
           <div class="form-row">
             <mat-form-field appearance="outline" class="search-field">
               <mat-label>Buscar trabajo, empresa o palabra clave</mat-label>
-              <input matInput formControlName="searchTerm" placeholder="Ej: desarrollador, contabilidad...">
+              <input matInput formControlName="searchTerm" (input)="onInputChange('searchTerm')" placeholder="Ej: desarrollador, contabilidad..." (keydown.enter)="onSearch()">
               <mat-icon matSuffix>search</mat-icon>
+                <mat-error *ngIf="searchForm.get('searchTerm')?.errors?.['minlength'] && searchForm.get('searchTerm')?.touched">
+                Ingresa al menos 2 caracteres
+              </mat-error>
             </mat-form-field>
             
             <mat-form-field appearance="outline" class="location-field">
               <mat-label>Ubicación</mat-label>
-              <input matInput formControlName="location" placeholder="Ej: Buenos Aires, Córdoba...">
+              <input matInput formControlName="location" (input)="onInputChange('location')" placeholder="Ej: Buenos Aires, Córdoba..." (keydown.enter)="onSearch()">
               <mat-icon matSuffix>location_on</mat-icon>
+              <mat-error *ngIf="searchForm.get('location')?.errors?.['minlength'] && searchForm.get('location')?.touched">
+                  Ingresa al menos 2 caracteres
+              </mat-error>
             </mat-form-field>
           </div>
 
@@ -159,7 +165,7 @@
                     [disabled]="hasAppliedToJob(job.id!)"
                     aria-label="Aplicar a la oferta de trabajo">
               <mat-icon>{{ hasAppliedToJob(job.id!) ? 'check' : 'send' }}</mat-icon>
-              {{ hasAppliedToJob(job.id!) ? 'Aplicado' : 'Aplicar' }}
+              {{ hasAppliedToJob(job.id!) ? 'Postulado' : 'Postular Ahora' }}
             </button>
           </mat-card-actions>
         </mat-card>

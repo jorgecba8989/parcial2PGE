@@ -249,4 +249,10 @@ export class JobSearchComponent implements OnInit {
     };
     return fieldNames[fieldKey] || fieldKey;
   }
+
+    onInputChange(fieldName: string) {
+    const searchControl = this.searchForm.get(fieldName);   
+    searchControl?.markAsTouched(); // Esto hace que se muestren los errores
+    searchControl?.updateValueAndValidity();
+  }
 }

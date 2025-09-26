@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { HighContrastService } from '../../services/high-contrast.service';
 import { AudioAccessibilityService } from '../../services/audio-accessibility.service';
 
@@ -22,5 +22,13 @@ export class HighContrastToggleComponent {
     const newState = this.highContrastService.toggleHighContrast();
     const message = newState ? 'Alto contraste activado' : 'Alto contraste desactivado';
     this.audioService.speak(message);
+  }
+
+  @HostListener('window:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    if (event.altKey && event.code === 'KeyC') {
+      event.preventDefault();
+      this.toggleHighContrast();
+    }
   }
 }
