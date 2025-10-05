@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { AudioAccessibilityService } from '../services/audio-accessibility.service';
 import { ApplicationDialogComponent } from '../components/application-dialog/application-dialog.component';
 import { JobsService, Job } from '../services/jobs.service';
+import { TestLoggerService } from '../services/test-logger.service';
 
 @Component({
   selector: 'app-job-search',
@@ -34,11 +35,12 @@ export class JobSearchComponent implements OnInit {
     private fb: FormBuilder,
     private audioService: AudioAccessibilityService,
     private dialog: MatDialog,
-    private jobsService: JobsService
+    private jobsService: JobsService,
+    private testLogger: TestLoggerService
   ) {
     this.searchForm = this.fb.group({
-      searchTerm: ['', [Validators.minLength(2)]],
-      location: ['', [Validators.minLength(2)]],
+      searchTerm: ['', [Validators.minLength(3)]],
+      location: ['', [Validators.minLength(3)]],
       jobType: [''],
       accessibility: [''],
       remoteOnly: [false],
@@ -61,6 +63,7 @@ export class JobSearchComponent implements OnInit {
         this.jobs = jobs;
         this.filteredJobs = jobs;
         console.log('Trabajos cargados desde Firestore:', jobs.length);
+        this.testLogger.success('Trabajos cargados desde Firestore', { count: jobs.length });
 
         // Calcular tiempo transcurrido y esperar si es necesario
         const elapsedTime = Date.now() - startTime;
@@ -72,6 +75,7 @@ export class JobSearchComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error cargando trabajos:', error);
+        this.testLogger.error('Error cargando trabajos', error);
         // Fallback a datos de ejemplo si Firebase falla
         this.loadSampleJobsAsFallback();
 
@@ -89,6 +93,7 @@ export class JobSearchComponent implements OnInit {
   // Método de respaldo si Firebase no está configurado
   loadSampleJobsAsFallback(): void {
     console.log('Usando datos de ejemplo como respaldo');
+    this.testLogger.warning('Usando datos de ejemplo como respaldo');
     this.jobs = [
       {
         title: 'Desarrollador Frontend',
@@ -102,6 +107,7 @@ export class JobSearchComponent implements OnInit {
       }
     ];
     this.filteredJobs = this.jobs;
+    this.testLogger.info('Trabajos de fallback cargados', { count: this.jobs.length });
   }
 
 
@@ -174,6 +180,12 @@ export class JobSearchComponent implements OnInit {
     ).subscribe({
       next: (applicationId) => {
         console.log('Aplicación enviada con ID:', applicationId);
+        this.testLogger.success('Aplicación registrada', {
+          applicationId,
+          jobTitle: job.title,
+          company: job.company,
+          email: applicationData.toEmail
+        });
         // Marcar como aplicado inmediatamente
         this.appliedJobs.add(job.id!);
         this.appliedJobsDetails.set(job.id!, applicationData.toEmail);
@@ -181,6 +193,7 @@ export class JobSearchComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error enviando aplicación:', error);
+        this.testLogger.error('Error enviando aplicación', error);
       }
     });
   }

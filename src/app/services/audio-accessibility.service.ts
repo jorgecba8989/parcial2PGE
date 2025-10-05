@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { TestLoggerService } from './test-logger.service';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +9,7 @@ export class AudioAccessibilityService {
   private audioContext: AudioContext | null = null;
   private isVoiceEnabled: boolean = true;
 
-  constructor() {
+  constructor(private testLogger: TestLoggerService) {
     this.initAudioContext();
     this.loadVoicePreference();
   }
@@ -16,8 +17,10 @@ export class AudioAccessibilityService {
   private initAudioContext() {
     try {
       this.audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+      this.testLogger.success('AudioContext inicializado correctamente');
     } catch (error) {
       console.warn('Web Audio API not supported', error);
+      this.testLogger.warning('Web Audio API no soportado', error);
     }
   }
 
@@ -59,6 +62,8 @@ export class AudioAccessibilityService {
 
     oscillator.start(this.audioContext.currentTime);
     oscillator.stop(this.audioContext.currentTime + duration);
+
+    this.testLogger.info(`Reproduciendo tono: ${frequency}Hz, duración: ${duration}s, tipo: ${type}`);
   }
 
   private playSequence(notes: { frequency: number, duration: number }[]) {
@@ -74,6 +79,7 @@ export class AudioAccessibilityService {
   private loadVoicePreference() {
     const saved = localStorage.getItem('voiceEnabled');
     this.isVoiceEnabled = saved !== null ? saved === 'true' : true;
+    this.testLogger.info('Preferencia de voz cargada', { isVoiceEnabled: this.isVoiceEnabled });
   }
 
   private saveVoicePreference() {
@@ -105,18 +111,26 @@ export class AudioAccessibilityService {
     utterance.lang = 'es-ES';
 
     this.synth.speak(utterance);
+    this.testLogger.info(`SpeechSynthesis: "${text}"`, {
+      lang: 'es-ES',
+      rate: utterance.rate,
+      pitch: utterance.pitch
+    });
   }
 
   announceSearchResults(count: number) {
     if (count === 0) {
       this.speak('No se encontraron oportunidades de trabajo');
       this.playErrorSound();
+      this.testLogger.warning('Búsqueda sin resultados', { count });
     } else if (count === 1) {
       this.speak('Se encontró 1 oportunidad de trabajo');
       this.playSuccessSound();
+      this.testLogger.success('Búsqueda completada', { count });
     } else {
       this.speak(`Se encontraron ${count} oportunidades de trabajo`);
       this.playSuccessSound();
+      this.testLogger.success('Búsqueda completada', { count });
     }
   }
 
@@ -142,6 +156,7 @@ export class AudioAccessibilityService {
 
     this.speak(message);
     this.playErrorSound();
+    this.testLogger.error(`Error en formulario: ${fieldName}`, { errorType });
   }
 
   announceAction(action: string) {

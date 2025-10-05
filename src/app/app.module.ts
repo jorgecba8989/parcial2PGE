@@ -24,6 +24,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { VoiceToggleComponent } from './components/voice-toggle/voice-toggle.component';
 import { HighContrastToggleComponent } from './components/high-contrast-toggle/high-contrast-toggle.component';
 import { LoadingComponent } from './components/loading/loading.component';
+import { TestRunnerComponent } from './test-cases/test-runner.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { LoadingComponent } from './components/loading/loading.component';
     ApplicationDialogComponent,
     VoiceToggleComponent,
     HighContrastToggleComponent,
-    LoadingComponent
+    LoadingComponent,
+    TestRunnerComponent
   ],
   imports: [
     BrowserModule,

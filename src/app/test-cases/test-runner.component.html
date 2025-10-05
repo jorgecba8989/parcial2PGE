@@ -1,0 +1,58 @@
+<div class="test-runner-container">
+  <h1>🧪 Ejecutor de Pruebas - Trabajo Inclusivo</h1>
+
+  <div class="test-controls">
+    <button (click)="runAllTests()" [disabled]="isRunning">
+      {{ isRunning ? 'Ejecutando...' : 'Ejecutar Todas las Pruebas' }}
+    </button>
+    <button (click)="clearResults()" [disabled]="isRunning">
+      Limpiar Resultados
+    </button>
+    <button (click)="downloadLogs()" [disabled]="isRunning || totalTestsExecuted === 0" class="download-btn">
+      📥 Descargar Logs
+      <span class="badge" *ngIf="totalTestsExecuted > 0">{{ totalTestsExecuted }}</span>
+    </button>
+  </div>
+
+  <div class="current-test" *ngIf="currentTestName">
+    <div class="spinner"></div>
+    <span>{{ currentTestName }}</span>
+  </div>
+
+  <div class="test-section">
+    <h2>✅ Casos Positivos</h2>
+    <button (click)="runTestCase1()" [disabled]="isRunning">Caso 1: Búsqueda Exitosa</button>
+    <button (click)="runTestCase2()" [disabled]="isRunning">Caso 2: Aplicación Exitosa</button>
+    <button (click)="runTestCase3()" [disabled]="isRunning">Caso 3: Audio Funcional</button>
+  </div>
+
+  <div class="test-section">
+    <h2>❌ Casos Negativos</h2>
+    <button (click)="runTestCase4()" [disabled]="isRunning">Caso 4: Timeout en Carga</button>
+    <button (click)="runTestCase5()" [disabled]="isRunning">Caso 5: Datos Inválidos</button>
+    <button (click)="runTestCase6()" [disabled]="isRunning">Caso 6: Error de Permisos</button>
+  </div>
+
+  <div class="test-results">
+    <h3>📊 Resultados</h3>
+    <div *ngIf="testResults.length === 0 && !isRunning" class="no-results">
+      <p>No hay pruebas ejecutadas aún. Haz clic en algún botón para comenzar.</p>
+    </div>
+    <div class="result-item" *ngFor="let result of testResults">
+      <span [class]="result.success ? 'success' : 'error'">
+        {{ result.success ? '✓' : '✗' }}
+      </span>
+      <strong>{{ result.name }}</strong>
+      <span class="duration">({{ result.duration }}s)</span>
+      <p>{{ result.details }}</p>
+    </div>
+  </div>
+
+  <div class="console-output">
+    <h3>📝 Consola de Logs</h3>
+    <div *ngIf="!consoleOutput" class="no-logs">
+      <p>Los logs aparecerán aquí cuando ejecutes las pruebas...</p>
+    </div>
+    <pre *ngIf="consoleOutput">{{ consoleOutput }}</pre>
+  </div>
+</div>
