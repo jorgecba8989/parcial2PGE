@@ -4,7 +4,7 @@
 
   <!-- Header -->
   <mat-toolbar color="primary">
-    <mat-icon>work</mat-icon>
+    <img src="assets/imagen/icono.png" alt="Logo" class="toolbar-logo">
     <span>Búsqueda de Trabajo Inclusivo</span>
     <span class="spacer"></span>
     <app-high-contrast-toggle></app-high-contrast-toggle>
@@ -27,7 +27,7 @@
               <input matInput formControlName="searchTerm" (input)="onInputChange('searchTerm')" placeholder="Ej: desarrollador, contabilidad..." (keydown.enter)="onSearch()">
               <mat-icon matSuffix>search</mat-icon>
                 <mat-error *ngIf="searchForm.get('searchTerm')?.errors?.['minlength'] && searchForm.get('searchTerm')?.touched">
-                Ingresa al menos 2 caracteres
+                Debe ingresar al menos 3 caracteres
               </mat-error>
             </mat-form-field>
             
@@ -36,7 +36,7 @@
               <input matInput formControlName="location" (input)="onInputChange('location')" placeholder="Ej: Buenos Aires, Córdoba..." (keydown.enter)="onSearch()">
               <mat-icon matSuffix>location_on</mat-icon>
               <mat-error *ngIf="searchForm.get('location')?.errors?.['minlength'] && searchForm.get('location')?.touched">
-                  Ingresa al menos 2 caracteres
+                  Debe ingresar al menos 3 caracteres
               </mat-error>
             </mat-form-field>
           </div>
