@@ -1,5 +1,7 @@
 .voice-toggle-button {
   transition: all 0.3s ease;
+  min-width: 40px !important;
+  min-height: 40px !important;
 
   &:hover {
     transform: scale(1.1);
@@ -9,6 +11,18 @@
     font-size: 24px;
     width: 24px;
     height: 24px;
+  }
+
+  @media (max-width: 600px) {
+    min-width: 36px !important;
+    min-height: 36px !important;
+    padding: 8px !important;
+
+    mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
   }
 }
 

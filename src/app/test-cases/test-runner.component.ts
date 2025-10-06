@@ -201,9 +201,10 @@ export class TestRunnerComponent implements OnInit {
 
     try {
       // Intentar operación sin permisos
-      this.testLogger.error('❌ FirebaseError: permission-denied');
-      this.testLogger.error('Error code: permission-denied');
-      this.testLogger.error('Error retornado: "No tiene permisos para realizar esta acción"');
+      this.testLogger.error('FirebaseError: permission-denied', {
+        code: 'permission-denied',
+        message: 'No tiene permisos para realizar esta acción'
+      });
       this.audioService.speak('Error al enviar aplicación');
 
       this.testLogger.endTestCase(true, 'Error capturado, usuario notificado, sistema permanece estable');

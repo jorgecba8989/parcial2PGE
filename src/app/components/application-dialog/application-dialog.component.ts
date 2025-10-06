@@ -32,25 +32,14 @@ export class ApplicationDialogComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    try {
-      // Anunciar que se abrió el diálogo de aplicación
-      this.audioService.speak('Formulario de aplicación abierto');
-    } catch (error) {
-      console.error('Error al inicializar el diálogo:', error);
-      // No bloqueamos la UI si falla el audio
-    }
+    // Anunciar que se abrió el diálogo de aplicación
+    this.audioService.speak('Formulario de aplicación abierto');
   }
 
   ngOnDestroy(): void {
     // Limpieza de recursos (RAII pattern)
-    try {
-      // Limpiar referencia al archivo
-      this.selectedFile = null;
-
-      console.log('Recursos liberados correctamente en application-dialog');
-    } catch (error) {
-      console.error('Error al liberar recursos:', error);
-    }
+    this.selectedFile = null;
+    console.log('Recursos liberados correctamente en application-dialog');
   }
 
   onFileSelected(event: Event): void {
@@ -151,15 +140,9 @@ export class ApplicationDialogComponent implements OnInit, OnDestroy {
   }
 
   onCancel(): void {
-    try {
-      this.audioService.speak('Aplicación cancelada');
-      console.log('Usuario canceló la aplicación');
-      this.dialogRef.close();
-    } catch (error) {
-      console.error('Error al cancelar:', error);
-      // Forzar cierre del diálogo aún si hay error
-      this.dialogRef.close();
-    }
+    this.audioService.speak('Aplicación cancelada');
+    console.log('Usuario canceló la aplicación');
+    this.dialogRef.close();
   }
 
   private checkFormErrors(): void {

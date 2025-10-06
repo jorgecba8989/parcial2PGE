@@ -40,6 +40,8 @@ mat-toolbar {
   border-radius: 0 0 15px 15px;
   display: flex;
   align-items: center;
+  padding: 8px 16px;
+  min-height: 64px;
 
   .toolbar-logo {
     height: 40px;
@@ -51,6 +53,12 @@ mat-toolbar {
 
     &:hover {
       transform: scale(1.1);
+    }
+
+    @media (max-width: 600px) {
+      height: 32px;
+      width: 32px;
+      margin-right: 8px;
     }
   }
 
@@ -67,6 +75,35 @@ mat-toolbar {
     &.spacer {
       flex: 1;
     }
+
+    @media (max-width: 600px) {
+      font-size: 1rem;
+    }
+
+    @media (max-width: 400px) {
+      font-size: 0.9rem;
+    }
+  }
+
+  // Botones de accesibilidad en mobile
+  app-high-contrast-toggle,
+  app-voice-toggle {
+    flex-shrink: 0;
+    margin-left: 4px;
+
+    @media (max-width: 600px) {
+      margin-left: 2px;
+    }
+  }
+
+  @media (max-width: 600px) {
+    padding: 8px 12px;
+    min-height: 56px;
+  }
+
+  @media (max-width: 400px) {
+    padding: 6px 8px;
+    min-height: 48px;
   }
 }
 
