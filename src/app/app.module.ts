@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
@@ -25,6 +25,7 @@ import { VoiceToggleComponent } from './components/voice-toggle/voice-toggle.com
 import { HighContrastToggleComponent } from './components/high-contrast-toggle/high-contrast-toggle.component';
 import { LoadingComponent } from './components/loading/loading.component';
 import { TestRunnerComponent } from './test-cases/test-runner.component';
+import { provideTranslateService } from "@ngx-translate/core";
 
 @NgModule({
   declarations: [
@@ -56,7 +57,12 @@ import { TestRunnerComponent } from './test-cases/test-runner.component';
     MatProgressSpinnerModule,
     MatTooltipModule
   ],
-  providers: [],
+  providers: [
+    provideTranslateService({
+      fallbackLang: 'es',
+      lang: 'es'
+    })
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
