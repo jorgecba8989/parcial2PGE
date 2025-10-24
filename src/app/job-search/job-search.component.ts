@@ -5,6 +5,7 @@ import { AudioAccessibilityService } from '../services/audio-accessibility.servi
 import { ApplicationDialogComponent } from '../components/application-dialog/application-dialog.component';
 import { JobsService, Job } from '../services/jobs.service';
 import { TestLoggerService } from '../services/test-logger.service';
+import { TranslationService } from '../services/translation.service'
 
 @Component({
   selector: 'app-job-search',
@@ -31,12 +32,15 @@ export class JobSearchComponent implements OnInit {
     'Apoyo auditivo'
   ];
 
+  languages: any = [];
+
   constructor(
     private fb: FormBuilder,
     private audioService: AudioAccessibilityService,
     private dialog: MatDialog,
     private jobsService: JobsService,
-    private testLogger: TestLoggerService
+    private testLogger: TestLoggerService,
+    public translateService: TranslationService
   ) {
     this.searchForm = this.fb.group({
       searchTerm: ['', [Validators.minLength(3)]],
@@ -46,6 +50,8 @@ export class JobSearchComponent implements OnInit {
       remoteOnly: [false],
       showAppliedOnly: [false]
     });
+
+    this.languages = this.translateService.getLanguages();
   }
 
   ngOnInit(): void {
@@ -267,5 +273,9 @@ export class JobSearchComponent implements OnInit {
     const searchControl = this.searchForm.get(fieldName);   
     searchControl?.markAsTouched(); // Esto hace que se muestren los errores
     searchControl?.updateValueAndValidity();
+  }
+
+  onLanguageChange(ev: any) {
+    this.translateService.chageLanguage(ev?.value);
   }
 }
