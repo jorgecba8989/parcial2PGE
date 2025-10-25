@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { AudioAccessibilityService } from '../services/audio-accessibility.service';
@@ -33,6 +33,7 @@ export class JobSearchComponent implements OnInit {
   ];
 
   languages: any = [];
+  currentLanguage: string = 'es';
 
   constructor(
     private fb: FormBuilder,
@@ -270,12 +271,24 @@ export class JobSearchComponent implements OnInit {
   }
 
     onInputChange(fieldName: string) {
-    const searchControl = this.searchForm.get(fieldName);   
+    const searchControl = this.searchForm.get(fieldName);
     searchControl?.markAsTouched(); // Esto hace que se muestren los errores
     searchControl?.updateValueAndValidity();
   }
 
-  onLanguageChange(ev: any) {
-    this.translateService.chageLanguage(ev?.value);
+  toggleLanguage(): void {
+    // Alternar entre español e inglés
+    this.currentLanguage = this.currentLanguage === 'es' ? 'en' : 'es';
+    const message = this.currentLanguage === 'es' ? 'Se cambia a idioma Español' : 'Se cambia a idioma Ingles';
+    this.audioService.speak(message);
+    this.translateService.chageLanguage(this.currentLanguage);
   }
+
+    @HostListener('window:keydown', ['$event'])
+    handleKeyboardEvent(event: KeyboardEvent) {
+      if (event.altKey && event.code === 'KeyI') {
+        event.preventDefault();
+        this.toggleLanguage();
+      }
+    }
 }

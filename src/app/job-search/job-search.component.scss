@@ -85,6 +85,36 @@ mat-toolbar {
     }
   }
 
+  // Botón de cambio de idioma
+  .language-toggle {
+    flex-shrink: 0;
+    margin-left: 4px;
+    color: white;
+    min-width: 40px;
+    height: 40px;
+    padding: 0;
+
+    .language-text {
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    @media (max-width: 600px) {
+      margin-left: 2px;
+      min-width: 36px;
+      height: 36px;
+
+      .language-text {
+        font-size: 0.9rem;
+      }
+    }
+  }
+
   // Botones de accesibilidad en mobile
   app-high-contrast-toggle,
   app-voice-toggle {

@@ -8,19 +8,14 @@
     <span>{{ translateService.translate('appTitle') }}</span>
     <span class="spacer"></span>
 
+    <button mat-icon-button class="language-toggle" (click)="toggleLanguage()" [attr.aria-label]="'Cambiar idioma a ' + (currentLanguage === 'es' ? 'inglés' : 'español')">
+      <span class="language-text">{{ currentLanguage === 'es' ? 'Es' : 'En' }}</span>
+    </button>
     <app-high-contrast-toggle></app-high-contrast-toggle>
     <app-voice-toggle></app-voice-toggle>
   </mat-toolbar>
 
   <div class="content-container">
-    <mat-form-field appearance="outline">
-      <mat-label>{{ translateService.translate('languageTitle') }}</mat-label>
-      <mat-select (selectionChange)="onLanguageChange($event)">
-        <mat-option *ngFor="let lang of languages" [value]="lang.value">
-          {{ translateService.translate(lang.code) }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
     <!-- Search Form -->
     <mat-card class="search-card">
       <mat-card-header>
