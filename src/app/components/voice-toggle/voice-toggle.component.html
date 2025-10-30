@@ -7,3 +7,13 @@
   class="voice-toggle-button">
   <mat-icon>{{ isVoiceEnabled ? 'volume_up' : 'volume_off' }}</mat-icon>
 </button>
+
+<button
+  mat-icon-button
+  [color]="isVoiceCommandEnabled ? 'success' : 'warn'"
+  (click)="toggleVoiceCommand()"
+  [attr.aria-label]="isVoiceCommandEnabled ? 'Desactivar comandos por voz' : 'Activar comandos por voz'"
+  [matTooltip]="isVoiceCommandEnabled ? 'Desactivar comandos por voz' : 'Activar comandos por voz'"
+  class="voice-command-toggle-button">
+  <mat-icon>{{ isVoiceCommandEnabled ? 'mic' : 'mic_off' }}</mat-icon>
+</button>

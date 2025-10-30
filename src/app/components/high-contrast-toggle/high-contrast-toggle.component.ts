@@ -1,4 +1,4 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, OnInit, OnDestroy } from '@angular/core';
 import { HighContrastService } from '../../services/high-contrast.service';
 import { AudioAccessibilityService } from '../../services/audio-accessibility.service';
 
@@ -7,12 +7,27 @@ import { AudioAccessibilityService } from '../../services/audio-accessibility.se
   templateUrl: './high-contrast-toggle.component.html',
   styleUrls: ['./high-contrast-toggle.component.scss']
 })
-export class HighContrastToggleComponent {
+export class HighContrastToggleComponent implements OnInit, OnDestroy {
 
   constructor(
     private highContrastService: HighContrastService,
     private audioService: AudioAccessibilityService
   ) { }
+
+  ngOnInit(): void {
+    window.addEventListener('toggleHighContrast', this.handleVoiceCommand);
+  }
+
+  ngOnDestroy(): void {
+    window.removeEventListener('toggleHighContrast', this.handleVoiceCommand);
+  }
+
+  handleVoiceCommand = (event: any) => {
+    const { enable } = event.detail;
+    if (enable !== this.isHighContrastEnabled) {
+      this.toggleHighContrast();
+    }
+  }
 
   get isHighContrastEnabled(): boolean {
     return this.highContrastService.isHighContrastActive();

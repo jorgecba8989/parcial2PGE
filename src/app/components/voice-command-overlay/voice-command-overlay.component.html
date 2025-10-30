@@ -1,0 +1,18 @@
+<div *ngIf="isVisible" class="voice-command-container">
+  <div
+    *ngIf="isBlockingMode"
+    class="blocking-overlay">
+  </div>
+
+  <div
+    class="voice-command-button"
+    (click)="onOverlayClick()"
+    (mousedown)="onMouseDown($event)"
+    (mouseup)="onMouseUp($event)"
+    (mousemove)="onMouseMove($event)"
+    (touchstart)="onTouchStart($event)"
+    (touchend)="onTouchEnd($event)"
+    (touchmove)="onTouchMove($event)">
+    <mat-icon [class.recording]="isRecording">{{ isRecording ? 'mic' : 'mic_none' }}</mat-icon>
+  </div>
+</div>

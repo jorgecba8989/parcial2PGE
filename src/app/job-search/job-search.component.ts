@@ -58,6 +58,71 @@ export class JobSearchComponent implements OnInit {
   ngOnInit(): void {
     this.loadJobsFromFirestore();
     this.loadUserApplications();
+    this.setupVoiceCommandListener();
+  }
+
+  setupVoiceCommandListener(): void {
+    window.addEventListener('voiceCommand', (event: any) => {
+      const { function: funcName, parameters } = event.detail;
+      this.executeVoiceCommand(funcName, parameters);
+    });
+  }
+
+  executeVoiceCommand(funcName: string, parameters: any): void {
+    console.log('Ejecutando comando de voz:', funcName, parameters);
+
+    switch (funcName) {
+      case 'change_lang':
+        this.changeLangByVoice(parameters.lang);
+        break;
+      case 'toggle_high_contrast':
+        this.toggleHighContrastByVoice(parameters.enable);
+        break;
+      case 'toggle_voice':
+        this.toggleVoiceByVoice(parameters.enable);
+        break;
+      case 'search_jobs':
+        this.searchJobsByVoice(parameters);
+        break;
+      default:
+        console.log('Comando no reconocido:', funcName);
+    }
+  }
+
+  changeLangByVoice(lang: string): void {
+    this.currentLanguage = lang;
+    const message = lang === 'es' ? 'Se cambia a idioma Español' : 'Se cambia a idioma Ingles';
+    this.audioService.speak(message);
+    this.translateService.chageLanguage(lang);
+  }
+
+  toggleHighContrastByVoice(enable: boolean): void {
+    const event = new CustomEvent('toggleHighContrast', { detail: { enable } });
+    window.dispatchEvent(event);
+  }
+
+  toggleVoiceByVoice(enable: boolean): void {
+    if (enable) {
+      this.audioService.speak('Voz activada');
+    }
+    const event = new CustomEvent('toggleVoice', { detail: { enable } });
+    window.dispatchEvent(event);
+  }
+
+  searchJobsByVoice(params: any): void {
+    if (params.searchTerm) {
+      this.searchForm.patchValue({ searchTerm: params.searchTerm });
+    }
+    if (params.location) {
+      this.searchForm.patchValue({ location: params.location });
+    }
+    if (params.jobType) {
+      this.searchForm.patchValue({ jobType: params.jobType });
+    }
+    if (params.remoteOnly !== undefined) {
+      this.searchForm.patchValue({ remoteOnly: params.remoteOnly });
+    }
+    this.onSearch();
   }
 
   loadJobsFromFirestore(): void {

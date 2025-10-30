@@ -1,6 +1,7 @@
 import { NgModule, ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -26,6 +27,7 @@ import { HighContrastToggleComponent } from './components/high-contrast-toggle/h
 import { LoadingComponent } from './components/loading/loading.component';
 import { TestRunnerComponent } from './test-cases/test-runner.component';
 import { provideTranslateService } from "@ngx-translate/core";
+import { VoiceCommandOverlayComponent } from './components/voice-command-overlay/voice-command-overlay.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +37,8 @@ import { provideTranslateService } from "@ngx-translate/core";
     VoiceToggleComponent,
     HighContrastToggleComponent,
     LoadingComponent,
-    TestRunnerComponent
+    TestRunnerComponent,
+    VoiceCommandOverlayComponent
   ],
   imports: [
     BrowserModule,
@@ -43,6 +46,7 @@ import { provideTranslateService } from "@ngx-translate/core";
     BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
+    HttpClientModule,
     MatToolbarModule,
     MatCardModule,
     MatInputModule,
