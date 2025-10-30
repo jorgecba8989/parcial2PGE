@@ -1,36 +1,36 @@
 <div class="application-dialog">
   <h2 mat-dialog-title>
     <mat-icon>email</mat-icon>
-    Enviar Email
+    {{ translateService.translate('sendEmail') }}
   </h2>
 
   <mat-dialog-content>
 
     <form [formGroup]="applicationForm" class="application-form">
       <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Email destinatario</mat-label>
+        <mat-label>{{ translateService.translate('recipientEmail') }}</mat-label>
         <input matInput
                type="email"
                formControlName="toEmail"
-               placeholder="destinatario@ejemplo.com"
-               aria-label="Ingresa el email del destinatario">
+               [placeholder]="translateService.translate('recipientEmailPlaceholder')"
+               [attr.aria-label]="translateService.translate('recipientEmailLabel')">
         <mat-icon matSuffix>email</mat-icon>
         <mat-error *ngIf="applicationForm.get('toEmail')?.hasError('required')">
-          El email del destinatario es requerido
+          {{ translateService.translate('recipientEmailRequired') }}
         </mat-error>
         <mat-error *ngIf="applicationForm.get('toEmail')?.hasError('email')">
-          Ingresa un email válido
+          {{ translateService.translate('validEmailRequired') }}
         </mat-error>
       </mat-form-field>
 
       <div class="file-upload-section">
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Archivo adjunto (opcional)</mat-label>
+          <mat-label>{{ translateService.translate('attachment') }}</mat-label>
           <input matInput
                  readonly
                  [value]="selectedFileName"
-                 placeholder="Selecciona un archivo (PDF o Word)"
-                 aria-label="Archivo adjunto seleccionado">
+                 [placeholder]="translateService.translate('selectFile')"
+                 [attr.aria-label]="translateService.translate('selectedFile')">
           <mat-icon matSuffix>attach_file</mat-icon>
         </mat-form-field>
 
@@ -39,15 +39,15 @@
                accept=".pdf,.doc,.docx"
                (change)="onFileSelected($event)"
                style="display: none;"
-               aria-label="Seleccionar archivo adjunto">
+               [attr.aria-label]="translateService.translate('selectedFile')">
 
         <button mat-stroked-button
                 type="button"
                 (click)="fileInput.click()"
                 class="file-select-button"
-                aria-label="Buscar archivo en tu dispositivo">
+                [attr.aria-label]="translateService.translate('selectFileLabel')">
           <mat-icon>folder_open</mat-icon>
-          Seleccionar archivo
+          {{ translateService.translate('selectFileButton') }}
         </button>
 
         <div *ngIf="fileError" class="file-error">
@@ -57,16 +57,16 @@
       </div>
 
       <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Mensaje</mat-label>
+        <mat-label>{{ translateService.translate('message') }}</mat-label>
         <textarea matInput
                   formControlName="message"
                   rows="4"
-                  placeholder="Escribe tu mensaje aquí..."
-                  aria-label="Mensaje del email">
+                  [placeholder]="translateService.translate('messagePlaceholder')"
+                  [attr.aria-label]="translateService.translate('messageLabel')">
         </textarea>
         <mat-icon matSuffix>message</mat-icon>
         <mat-error *ngIf="applicationForm.get('message')?.hasError('required')">
-          El mensaje es requerido
+          {{ translateService.translate('messageRequired') }}
         </mat-error>
       </mat-form-field>
     </form>
@@ -75,16 +75,16 @@
   <mat-dialog-actions align="end">
     <button mat-button
             (click)="onCancel()"
-            aria-label="Cancelar envío de email">
+            [attr.aria-label]="translateService.translate('cancelEmailLabel')">
       <mat-icon>close</mat-icon>
-      Cancelar
+      {{ translateService.translate('cancel') }}
     </button>
 
     <button mat-raised-button
             color="primary"
             (click)="onSubmit()"
             [disabled]="applicationForm.invalid || isLoading"
-            aria-label="Enviar email">
+            [attr.aria-label]="translateService.translate('sendEmailLabel')">
       <mat-icon *ngIf="!isLoading">send</mat-icon>
       <mat-spinner *ngIf="isLoading"
                    diameter="20"
@@ -92,7 +92,7 @@
                    color="accent">
       </mat-spinner>
       <span [attr.aria-live]="isLoading ? 'polite' : null">
-        {{ isLoading ? 'Enviando...' : 'Enviar Email' }}
+        {{ isLoading ? translateService.translate('sending') : translateService.translate('send') }}
       </span>
     </button>
   </mat-dialog-actions>

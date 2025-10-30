@@ -1,6 +1,6 @@
 <div class="job-search-container">
   <!-- Loading UBP -->
-  <app-loading [isVisible]="isLoading" [message]="'Cargando oportunidades laborales...'"></app-loading>
+  <app-loading [isVisible]="isLoading" [message]="translateService.translate('loading')"></app-loading>
 
   <!-- Header -->
   <mat-toolbar color="primary">
@@ -8,7 +8,7 @@
     <span>{{ translateService.translate('appTitle') }}</span>
     <span class="spacer"></span>
 
-    <button mat-icon-button class="language-toggle" (click)="toggleLanguage()" [attr.aria-label]="'Cambiar idioma a ' + (currentLanguage === 'es' ? 'inglés' : 'español')">
+    <button mat-icon-button class="language-toggle" (click)="toggleLanguage()" [attr.aria-label]="translateService.translate('changeLanguageTo') + ' ' + (currentLanguage === 'es' ? translateService.translate('english') : translateService.translate('spanish'))">
       <span class="language-text">{{ currentLanguage === 'es' ? 'Es' : 'En' }}</span>
     </button>
     <app-high-contrast-toggle></app-high-contrast-toggle>
@@ -19,37 +19,37 @@
     <!-- Search Form -->
     <mat-card class="search-card">
       <mat-card-header>
-        <mat-card-title>Encuentra tu oportunidad laboral</mat-card-title>
-        <mat-card-subtitle>Trabajos inclusivos y accesibles</mat-card-subtitle>
+        <mat-card-title>{{ translateService.translate('findOpportunity') }}</mat-card-title>
+        <mat-card-subtitle>{{ translateService.translate('inclusiveJobs') }}</mat-card-subtitle>
       </mat-card-header>
       
       <mat-card-content>
         <form [formGroup]="searchForm" class="search-form">
           <div class="form-row">
             <mat-form-field appearance="outline" class="search-field">
-              <mat-label>Buscar trabajo, empresa o palabra clave</mat-label>
-              <input matInput formControlName="searchTerm" (input)="onInputChange('searchTerm')" placeholder="Ej: desarrollador, contabilidad..." (keydown.enter)="onSearch()">
+              <mat-label>{{ translateService.translate('searchPlaceholder') }}</mat-label>
+              <input matInput formControlName="searchTerm" (input)="onInputChange('searchTerm')" [placeholder]="translateService.translate('searchExample')" (keydown.enter)="onSearch()">
               <mat-icon matSuffix>search</mat-icon>
                 <mat-error *ngIf="searchForm.get('searchTerm')?.errors?.['minlength'] && searchForm.get('searchTerm')?.touched">
-                Debe ingresar al menos 3 caracteres
+                {{ translateService.translate('minLengthError') }}
               </mat-error>
             </mat-form-field>
             
             <mat-form-field appearance="outline" class="location-field">
-              <mat-label>Ubicación</mat-label>
-              <input matInput formControlName="location" (input)="onInputChange('location')" placeholder="Ej: Buenos Aires, Córdoba..." (keydown.enter)="onSearch()">
+              <mat-label>{{ translateService.translate('location') }}</mat-label>
+              <input matInput formControlName="location" (input)="onInputChange('location')" [placeholder]="translateService.translate('locationExample')" (keydown.enter)="onSearch()">
               <mat-icon matSuffix>location_on</mat-icon>
               <mat-error *ngIf="searchForm.get('location')?.errors?.['minlength'] && searchForm.get('location')?.touched">
-                  Debe ingresar al menos 3 caracteres
+                  {{ translateService.translate('minLengthError') }}
               </mat-error>
             </mat-form-field>
           </div>
 
           <div class="form-row">
             <mat-form-field appearance="outline" class="select-field">
-              <mat-label>Tipo de trabajo</mat-label>
+              <mat-label>{{ translateService.translate('jobType') }}</mat-label>
               <mat-select formControlName="jobType">
-                <mat-option value="">Todos</mat-option>
+                <mat-option value="">{{ translateService.translate('all') }}</mat-option>
                 <mat-option *ngFor="let type of jobTypes" [value]="type">
                   {{ type }}
                 </mat-option>
@@ -57,9 +57,9 @@
             </mat-form-field>
             
             <mat-form-field appearance="outline" class="select-field">
-              <mat-label>Características de accesibilidad</mat-label>
+              <mat-label>{{ translateService.translate('accessibility') }}</mat-label>
               <mat-select formControlName="accessibility">
-                <mat-option value="">Todas</mat-option>
+                <mat-option value="">{{ translateService.translate('allFeminine') }}</mat-option>
                 <mat-option *ngFor="let option of accessibilityOptions" [value]="option">
                   {{ option }}
                 </mat-option>
@@ -70,25 +70,25 @@
           <div class="form-actions">
             <div class="checkboxes-container">
               <mat-checkbox formControlName="remoteOnly" color="primary">
-                Solo trabajos remotos
+                {{ translateService.translate('remoteOnly') }}
               </mat-checkbox>
 
               <mat-checkbox formControlName="showAppliedOnly" color="primary">
-                Email aplicados
+                {{ translateService.translate('showAppliedOnly') }}
               </mat-checkbox>
             </div>
 
             <div class="action-buttons">
               <button mat-raised-button color="primary" type="button" (click)="onSearch()"
-                      aria-label="Buscar oportunidades de trabajo">
+                      [attr.aria-label]="translateService.translate('searchOpportunities')">
                 <mat-icon>search</mat-icon>
-                Buscar
+                {{ translateService.translate('search') }}
               </button>
 
               <button mat-raised-button color="warn" type="button" (click)="clearFilters()"
-                      aria-label="Limpiar todos los filtros de búsqueda">
+                      [attr.aria-label]="translateService.translate('clearAllFilters')">
                 <mat-icon>clear</mat-icon>
-                Limpiar filtros
+                {{ translateService.translate('clearFilters') }}
               </button>
             </div>
           </div>
@@ -99,7 +99,7 @@
     <!-- Results Section -->
     <div class="results-section">
       <div class="results-header">
-        <h2>{{ filteredJobs.length }} oportunidades encontradas</h2>
+        <h2>{{ filteredJobs.length }} {{ translateService.translate('opportunitiesFound') }}</h2>
       </div>
 
       <!-- Job Cards -->
@@ -121,7 +121,7 @@
             <!-- Mensaje de aplicación enviada -->
             <div *ngIf="hasAppliedToJob(job.id!)" class="applied-message">
               <mat-icon color="primary">check_circle</mat-icon>
-              <span>Correo enviado</span>
+              <span>{{ translateService.translate('emailSent') }}</span>
             </div>
 
             <div class="job-details">
@@ -143,14 +143,14 @@
                 
                 <div class="meta-item" *ngIf="job.remote">
                   <mat-icon>laptop</mat-icon>
-                  <span>Remoto</span>
+                  <span>{{ translateService.translate('remote') }}</span>
                 </div>
               </div>
               
               <p class="job-description">{{ job.description }}</p>
               
               <div class="accessibility-features">
-                <h4>Características de accesibilidad:</h4>
+                <h4>{{ translateService.translate('accessibilityFeatures') }}</h4>
                 <div class="chips-container">
                   <mat-chip-listbox>
                     <mat-chip *ngFor="let feature of job.accessibility" color="accent" selected>
@@ -167,9 +167,9 @@
                     [color]="hasAppliedToJob(job.id!) ? 'accent' : 'primary'"
                     (click)="onApply(job)"
                     [disabled]="hasAppliedToJob(job.id!)"
-                    aria-label="Aplicar a la oferta de trabajo">
+                    [attr.aria-label]="translateService.translate('applyToJob')">
               <mat-icon>{{ hasAppliedToJob(job.id!) ? 'check' : 'send' }}</mat-icon>
-              {{ hasAppliedToJob(job.id!) ? 'Postulado' : 'Postular Ahora' }}
+              {{ hasAppliedToJob(job.id!) ? translateService.translate('applied') : translateService.translate('apply') }}
             </button>
           </mat-card-actions>
         </mat-card>
@@ -178,12 +178,12 @@
       <!-- No Results Message -->
       <div *ngIf="filteredJobs.length === 0" class="no-results">
         <mat-icon class="large-icon">search_off</mat-icon>
-        <h3>No se encontraron oportunidades</h3>
-        <p>Intenta ajustar tus filtros de búsqueda o explora otras opciones.</p>
+        <h3>{{ translateService.translate('noResultsTitle') }}</h3>
+        <p>{{ translateService.translate('noResultsMessage') }}</p>
         <button mat-raised-button color="primary" (click)="clearFilters()"
-                aria-label="Ver todas las oportunidades disponibles">
+                [attr.aria-label]="translateService.translate('seeAllOpportunitiesLabel')">
           <mat-icon>refresh</mat-icon>
-          Ver todas las oportunidades
+          {{ translateService.translate('seeAllOpportunities') }}
         </button>
       </div>
     </div>

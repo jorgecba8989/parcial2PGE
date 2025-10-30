@@ -1,6 +1,7 @@
 import { Component, HostListener, OnInit, OnDestroy } from '@angular/core';
 import { AudioAccessibilityService } from '../../services/audio-accessibility.service';
 import { VoiceCommandService } from '../../services/voice-command.service';
+import { TranslationService } from '../../services/translation.service';
 
 @Component({
   selector: 'app-voice-toggle',
@@ -11,7 +12,8 @@ export class VoiceToggleComponent implements OnInit, OnDestroy {
 
   constructor(
     private audioService: AudioAccessibilityService,
-    private voiceCommandService: VoiceCommandService
+    private voiceCommandService: VoiceCommandService,
+    private translationService: TranslationService
   ) { }
 
   ngOnInit(): void {
@@ -39,7 +41,8 @@ export class VoiceToggleComponent implements OnInit, OnDestroy {
 
   toggleVoice(): void {
     const newState = this.audioService.toggleVoice();
-    const message = newState ? 'Voz activada' : 'Voz desactivada';
+    const messageKey = newState ? 'voiceEnabled' : 'voiceDisabled';
+    const message = this.translationService.translate(messageKey);
 
     if (newState) {
       this.audioService.speak(message);
@@ -48,7 +51,8 @@ export class VoiceToggleComponent implements OnInit, OnDestroy {
 
   toggleVoiceCommand(): void {
     const newState = this.voiceCommandService.toggleVoiceCommand();
-    const message = newState ? 'Comandos por voz habilitados' : 'Comandos por voz deshabilitados';
+    const messageKey = newState ? 'voiceCommandsEnabled' : 'voiceCommandsDisabled';
+    const message = this.translationService.translate(messageKey);
 
     if (this.audioService.isVoiceActive()) {
       this.audioService.speak(message);

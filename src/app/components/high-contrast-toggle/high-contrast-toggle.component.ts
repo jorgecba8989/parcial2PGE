@@ -1,6 +1,7 @@
 import { Component, HostListener, OnInit, OnDestroy } from '@angular/core';
 import { HighContrastService } from '../../services/high-contrast.service';
 import { AudioAccessibilityService } from '../../services/audio-accessibility.service';
+import { TranslationService } from '../../services/translation.service';
 
 @Component({
   selector: 'app-high-contrast-toggle',
@@ -11,7 +12,8 @@ export class HighContrastToggleComponent implements OnInit, OnDestroy {
 
   constructor(
     private highContrastService: HighContrastService,
-    private audioService: AudioAccessibilityService
+    private audioService: AudioAccessibilityService,
+    private translationService: TranslationService
   ) { }
 
   ngOnInit(): void {
@@ -35,7 +37,8 @@ export class HighContrastToggleComponent implements OnInit, OnDestroy {
 
   toggleHighContrast(): void {
     const newState = this.highContrastService.toggleHighContrast();
-    const message = newState ? 'Alto contraste activado' : 'Alto contraste desactivado';
+    const messageKey = newState ? 'highContrastEnabled' : 'highContrastDisabled';
+    const message = this.translationService.translate(messageKey);
     this.audioService.speak(message);
   }
 

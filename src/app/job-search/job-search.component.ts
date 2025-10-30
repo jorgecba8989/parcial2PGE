@@ -91,9 +91,10 @@ export class JobSearchComponent implements OnInit {
 
   changeLangByVoice(lang: string): void {
     this.currentLanguage = lang;
-    const message = lang === 'es' ? 'Se cambia a idioma Español' : 'Se cambia a idioma Ingles';
-    this.audioService.speak(message);
     this.translateService.chageLanguage(lang);
+    const languageName = lang === 'es' ? this.translateService.translate('spanish') : this.translateService.translate('english');
+    const message = this.translateService.translate('languageChanged') + ' ' + languageName;
+    this.audioService.speak(message);
   }
 
   toggleHighContrastByVoice(enable: boolean): void {
@@ -103,7 +104,7 @@ export class JobSearchComponent implements OnInit {
 
   toggleVoiceByVoice(enable: boolean): void {
     if (enable) {
-      this.audioService.speak('Voz activada');
+      this.audioService.speak(this.translateService.translate('voiceEnabled'));
     }
     const event = new CustomEvent('toggleVoice', { detail: { enable } });
     window.dispatchEvent(event);
@@ -344,9 +345,10 @@ export class JobSearchComponent implements OnInit {
   toggleLanguage(): void {
     // Alternar entre español e inglés
     this.currentLanguage = this.currentLanguage === 'es' ? 'en' : 'es';
-    const message = this.currentLanguage === 'es' ? 'Se cambia a idioma Español' : 'Se cambia a idioma Ingles';
-    this.audioService.speak(message);
     this.translateService.chageLanguage(this.currentLanguage);
+    const languageName = this.currentLanguage === 'es' ? this.translateService.translate('spanish') : this.translateService.translate('english');
+    const message = this.translateService.translate('languageChanged') + ' ' + languageName;
+    this.audioService.speak(message);
   }
 
     @HostListener('window:keydown', ['$event'])

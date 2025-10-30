@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AudioAccessibilityService } from '../../services/audio-accessibility.service';
 import { TestLoggerService } from '../../services/test-logger.service';
+import { TranslationService } from '../../services/translation.service';
 
 
 @Component({
@@ -22,6 +23,7 @@ export class ApplicationDialogComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private audioService: AudioAccessibilityService,
     private testLogger: TestLoggerService,
+    public translateService: TranslationService,
     public dialogRef: MatDialogRef<ApplicationDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data?: any
   ) {
@@ -33,7 +35,7 @@ export class ApplicationDialogComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     // Anunciar que se abrió el diálogo de aplicación
-    this.audioService.speak('Formulario de aplicación abierto');
+    this.audioService.speak(this.translateService.translate('applicationFormOpened'));
   }
 
   ngOnDestroy(): void {
@@ -60,10 +62,10 @@ export class ApplicationDialogComponent implements OnInit, OnDestroy {
       const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
 
       if (!allowedTypes.includes(file.type)) {
-        this.fileError = 'Solo se permiten archivos PDF, DOC o DOCX';
+        this.fileError = this.translateService.translate('fileTypeError');
         this.selectedFile = null;
         this.selectedFileName = '';
-        this.audioService.announceFormError('archivo', 'type');
+        this.audioService.announceFormError(this.translateService.translate('fieldFile'), 'type');
         console.warn('Tipo de archivo no permitido:', file.type);
         this.testLogger.error('Tipo de archivo no permitido', { fileType: file.type });
         return;
@@ -72,10 +74,10 @@ export class ApplicationDialogComponent implements OnInit, OnDestroy {
       // Validar tamaño (máximo 5MB)
       const maxSize = 5 * 1024 * 1024;
       if (file.size > maxSize) {
-        this.fileError = 'El archivo no debe superar los 5MB';
+        this.fileError = this.translateService.translate('fileSizeError');
         this.selectedFile = null;
         this.selectedFileName = '';
-        this.audioService.announceFormError('archivo', 'size');
+        this.audioService.announceFormError(this.translateService.translate('fieldFile'), 'size');
         console.warn('Archivo excede el tamaño máximo:', file.size);
         this.testLogger.error('Archivo excede el tamaño máximo', { size: file.size, maxSize });
         return;
@@ -85,16 +87,17 @@ export class ApplicationDialogComponent implements OnInit, OnDestroy {
       this.selectedFile = file;
       this.selectedFileName = file.name;
       this.fileError = '';
-      this.audioService.speak(`Archivo ${file.name} seleccionado correctamente`);
+      const successMessage = this.translateService.translate('fileSelectedSuccess').replace('{{fileName}}', file.name);
+      this.audioService.speak(successMessage);
       console.log('Archivo seleccionado correctamente:', file.name);
       this.testLogger.success('Archivo seleccionado correctamente', { fileName: file.name, size: file.size });
 
     } catch (error) {
-      this.fileError = 'Error al procesar el archivo. Por favor intente nuevamente.';
+      this.fileError = this.translateService.translate('fileSelectionError');
       this.selectedFile = null;
       this.selectedFileName = '';
       console.error('Error en onFileSelected:', error);
-      this.audioService.speak('Error al seleccionar archivo');
+      this.audioService.speak(this.translateService.translate('fileSelectionError'));
     }
   }
 
@@ -120,27 +123,27 @@ export class ApplicationDialogComponent implements OnInit, OnDestroy {
       // Activar estado de loading
       this.isLoading = true;
       this.testLogger.info('Formulario válido', { email: toEmail, hasAttachment: !!this.selectedFile });
-      this.audioService.speak('Procesando aplicación...');
+      this.audioService.speak(this.translateService.translate('processingApplication'));
       this.audioService.playConfirmationSound();
 
       console.log('Enviando aplicación a:', toEmail);
 
-      this.audioService.speak('Aplicación preparada exitosamente');
+      this.audioService.speak(this.translateService.translate('applicationPreparedSuccess'));
       this.audioService.playSuccessSound();
       console.log('Aplicación enviada exitosamente');
       this.testLogger.success('Aplicación preparada exitosamente');
       this.dialogRef.close({ toEmail, message, attachmentFile: this.selectedFile });
 
     } catch (error) {
-      this.generalError = 'Error al enviar la aplicación. Por favor intente nuevamente.';
+      this.generalError = this.translateService.translate('applicationSendError');
       this.isLoading = false;
       console.error('Error en onSubmit:', error);
-      this.audioService.speak('Error al enviar aplicación');
+      this.audioService.speak(this.translateService.translate('applicationSendError'));
     }
   }
 
   onCancel(): void {
-    this.audioService.speak('Aplicación cancelada');
+    this.audioService.speak(this.translateService.translate('applicationCanceled'));
     console.log('Usuario canceló la aplicación');
     this.dialogRef.close();
   }
@@ -154,7 +157,7 @@ export class ApplicationDialogComponent implements OnInit, OnDestroy {
         if (control.invalid && control.errors) {
           const errors = Object.keys(control.errors);
           if (errors.length > 0) {
-            const fieldName = key === 'toEmail' ? 'email destinatario' : 'mensaje';
+            const fieldName = key === 'toEmail' ? this.translateService.translate('fieldRecipientEmail') : this.translateService.translate('fieldMessage');
             this.audioService.announceFormError(fieldName, errors[0]);
             console.warn(`Error en campo ${fieldName}:`, errors[0]);
           }

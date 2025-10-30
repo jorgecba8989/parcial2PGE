@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { TestLoggerService } from './test-logger.service';
+import { TranslationService } from './translation.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,10 @@ export class AudioAccessibilityService {
   private audioContext: AudioContext | null = null;
   private isVoiceEnabled: boolean = true;
 
-  constructor(private testLogger: TestLoggerService) {
+  constructor(
+    private testLogger: TestLoggerService,
+    private translationService: TranslationService
+  ) {
     this.initAudioContext();
     this.loadVoicePreference();
   }
@@ -108,51 +112,59 @@ export class AudioAccessibilityService {
     utterance.rate = options?.rate || 1;
     utterance.pitch = options?.pitch || 1;
     utterance.volume = options?.volume || 0.8;
-    utterance.lang = 'es-ES';
+
+    const currentLang = this.translationService.getCurrentLang();
+    utterance.lang = currentLang === 'es' ? 'es-ES' : 'en-US';
 
     this.synth.speak(utterance);
     this.testLogger.info(`SpeechSynthesis: "${text}"`, {
-      lang: 'es-ES',
+      lang: utterance.lang,
       rate: utterance.rate,
       pitch: utterance.pitch
     });
   }
 
   announceSearchResults(count: number) {
+    let message: string;
     if (count === 0) {
-      this.speak('No se encontraron oportunidades de trabajo');
+      message = this.translationService.translate('noOpportunities');
+      this.speak(message);
       this.playErrorSound();
       this.testLogger.warning('Búsqueda sin resultados', { count });
     } else if (count === 1) {
-      this.speak('Se encontró 1 oportunidad de trabajo');
+      message = this.translationService.translate('oneOpportunity');
+      this.speak(message);
       this.playSuccessSound();
       this.testLogger.success('Búsqueda completada', { count });
     } else {
-      this.speak(`Se encontraron ${count} oportunidades de trabajo`);
+      message = this.translationService.translate('multipleOpportunities').replace('{{count}}', count.toString());
+      this.speak(message);
       this.playSuccessSound();
       this.testLogger.success('Búsqueda completada', { count });
     }
   }
 
   announceFormError(fieldName: string, errorType: string) {
-    let message = `Error en el campo ${fieldName}: `;
+    let errorMessage: string;
 
     switch (errorType) {
       case 'required':
-        message += 'Este campo es obligatorio';
+        errorMessage = this.translationService.translate('errorRequired');
         break;
       case 'minlength':
-        message += 'El texto es demasiado corto';
+        errorMessage = this.translationService.translate('errorMinlength');
         break;
       case 'maxlength':
-        message += 'El texto es demasiado largo';
+        errorMessage = this.translationService.translate('errorMaxlength');
         break;
       case 'email':
-        message += 'Formato de email inválido';
+        errorMessage = this.translationService.translate('errorEmail');
         break;
       default:
-        message += 'Valor inválido';
+        errorMessage = this.translationService.translate('errorInvalid');
     }
+
+    const message = this.translationService.translate('formError').replace('{{field}}', fieldName) + errorMessage;
 
     this.speak(message);
     this.playErrorSound();
@@ -160,14 +172,15 @@ export class AudioAccessibilityService {
   }
 
   announceAction(action: string) {
-    const messages = {
-      'apply': 'Aplicando a la oferta de trabajo',
-      'search': 'Buscando oportunidades de trabajo',
-      'clear': 'Limpiando filtros de búsqueda',
-      'already_applied': 'Ya aplicaste a esta oferta de trabajo'
+    const actionKeys: Record<string, string> = {
+      'apply': 'actionApply',
+      'search': 'actionSearch',
+      'clear': 'actionClear',
+      'already_applied': 'actionAlreadyApplied'
     };
 
-    const message = messages[action as keyof typeof messages] || action;
+    const translationKey = actionKeys[action];
+    const message = translationKey ? this.translationService.translate(translationKey) : action;
     this.speak(message);
     this.playConfirmationSound();
   }
