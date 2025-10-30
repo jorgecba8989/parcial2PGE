@@ -7,6 +7,7 @@ export interface VoiceCommandResponse {
   function?: string;
   parameters?: any;
   message?: string;
+  error_type?: 'not_available' | 'not_recognized' | 'api_error';
 }
 
 @Injectable({

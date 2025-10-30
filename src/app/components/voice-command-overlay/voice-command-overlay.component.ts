@@ -1,6 +1,8 @@
 import { Component, OnInit, OnDestroy, HostListener, NgZone } from '@angular/core';
 import { VoiceCommandService } from '../../services/voice-command.service';
 import { VoiceInterpreterService } from '../../services/voice-interpreter.service';
+import { AudioAccessibilityService } from '../../services/audio-accessibility.service';
+import { TranslationService } from '../../services/translation.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -26,6 +28,8 @@ export class VoiceCommandOverlayComponent implements OnInit, OnDestroy {
   constructor(
     private voiceCommandService: VoiceCommandService,
     private voiceInterpreterService: VoiceInterpreterService,
+    private audioService: AudioAccessibilityService,
+    private translationService: TranslationService,
     private zone: NgZone
   ) { }
 
@@ -106,7 +110,7 @@ export class VoiceCommandOverlayComponent implements OnInit, OnDestroy {
     if (this.isPressing && this.isRecording) {
       const deltaY = clientY - this.pressStartY;
       if (deltaY > 100) {
-        this.cancelRecording();
+        this.cancelRecording(true); // true = anunciar cancelación
       }
     }
   }
@@ -140,6 +144,9 @@ export class VoiceCommandOverlayComponent implements OnInit, OnDestroy {
             this.isRecording = true;
           });
         }, 100);
+        // Anunciar por voz que la grabación ha iniciado
+        const startMessage = this.translationService.translate('voiceRecordingStarted');
+        this.audioService.speak(startMessage);
       };
 
       this.recognition.onresult = (event: any) => {
@@ -158,6 +165,10 @@ export class VoiceCommandOverlayComponent implements OnInit, OnDestroy {
         }, 100);
         if (event.error === 'no-speech') {
           console.warn('No se detectó voz. Intenta hablar más alto.');
+          // Anunciar por voz que no se detectó habla
+          const noSpeechMessage = this.translationService.translate('voiceNoSpeechDetected');
+          this.audioService.speak(noSpeechMessage);
+          this.audioService.playErrorSound();
         } else if (event.error === 'aborted') {
           console.log('Reconocimiento cancelado por el usuario');
         }
@@ -186,7 +197,7 @@ export class VoiceCommandOverlayComponent implements OnInit, OnDestroy {
     this.isRecording = false;
   }
 
-  private cancelRecording(): void {
+  private cancelRecording(announceCancel: boolean = false): void {
     if (this.recognition) {
       try {
         this.recognition.abort();
@@ -197,6 +208,12 @@ export class VoiceCommandOverlayComponent implements OnInit, OnDestroy {
     }
     this.isRecording = false;
     this.isPressing = false;
+
+    // Anunciar cancelación solo si se solicita explícitamente (ej: deslizar hacia abajo)
+    if (announceCancel) {
+      const cancelMessage = this.translationService.translate('voiceCommandCanceled');
+      this.audioService.speak(cancelMessage);
+    }
   }
 
   private stopAndProcessRecording(): void {
@@ -205,6 +222,11 @@ export class VoiceCommandOverlayComponent implements OnInit, OnDestroy {
 
   private sendTranscription(transcription: string): void {
     console.log('Enviando al intérprete:', transcription);
+
+    // Anunciar que se está procesando el comando
+    const processingMessage = this.translationService.translate('voiceProcessingCommand');
+    this.audioService.speak(processingMessage);
+
     this.voiceInterpreterService.sendTranscriptionToInterpreter(transcription).subscribe({
       next: (response) => {
         console.log('Respuesta del intérprete:', response);
@@ -212,6 +234,10 @@ export class VoiceCommandOverlayComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         console.error('Error al enviar transcripción:', error);
+        // Anunciar error por voz
+        const errorMessage = this.translationService.translate('voiceCommandError');
+        this.audioService.speak(errorMessage);
+        this.audioService.playErrorSound();
       }
     });
   }
@@ -219,10 +245,29 @@ export class VoiceCommandOverlayComponent implements OnInit, OnDestroy {
   private processCommandResponse(response: any): void {
     if (!response.success) {
       console.log('Comando no reconocido:', response.message);
+
+      // Determinar tipo de error y anunciar mensaje apropiado
+      let errorMessageKey: string;
+
+      if (response.error_type === 'not_available') {
+        errorMessageKey = 'voiceCommandNotAvailable';
+      } else if (response.error_type === 'not_recognized') {
+        errorMessageKey = 'voiceCommandNotRecognized';
+      } else {
+        errorMessageKey = 'voiceCommandError';
+      }
+
+      const errorMessage = this.translationService.translate(errorMessageKey);
+      this.audioService.speak(errorMessage);
+      this.audioService.playErrorSound();
+
       return;
     }
 
     console.log('Ejecutando función:', response.function, 'con parámetros:', response.parameters);
+
+    // Reproducir sonido de confirmación
+    this.audioService.playConfirmationSound();
 
     window.dispatchEvent(new CustomEvent('voiceCommand', {
       detail: {

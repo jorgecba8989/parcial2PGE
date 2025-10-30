@@ -84,5 +84,12 @@
     "voiceEnabled": "Voice enabled",
     "voiceDisabled": "Voice disabled",
     "voiceCommandsEnabled": "Voice commands enabled",
-    "voiceCommandsDisabled": "Voice commands disabled"
+    "voiceCommandsDisabled": "Voice commands disabled",
+    "voiceCommandError": "Error processing voice command. Try again.",
+    "voiceCommandNotRecognized": "Command not recognized. Please try again.",
+    "voiceCommandNotAvailable": "I don't have access to that function. Try another command.",
+    "voiceNoSpeechDetected": "No speech detected. Try speaking louder or more clearly.",
+    "voiceRecordingStarted": "Recording started. Speak now.",
+    "voiceProcessingCommand": "Processing command.",
+    "voiceCommandCanceled": "Command canceled."
 }

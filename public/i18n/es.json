@@ -84,5 +84,12 @@
     "voiceEnabled": "Voz activada",
     "voiceDisabled": "Voz desactivada",
     "voiceCommandsEnabled": "Comandos por voz habilitados",
-    "voiceCommandsDisabled": "Comandos por voz deshabilitados"
+    "voiceCommandsDisabled": "Comandos por voz deshabilitados",
+    "voiceCommandError": "Error al procesar el comando de voz. Intenta nuevamente.",
+    "voiceCommandNotRecognized": "No se reconoció el comando. Por favor intenta nuevamente.",
+    "voiceCommandNotAvailable": "No tengo acceso a esa función. Intenta con otro comando.",
+    "voiceNoSpeechDetected": "No se detectó voz. Intenta hablar más alto o más claro.",
+    "voiceRecordingStarted": "Grabación iniciada. Habla ahora.",
+    "voiceProcessingCommand": "Procesando comando.",
+    "voiceCommandCanceled": "Comando cancelado."
 }
