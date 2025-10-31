@@ -58,6 +58,75 @@ export class JobSearchComponent implements OnInit {
   ngOnInit(): void {
     this.loadJobsFromFirestore();
     this.loadUserApplications();
+    this.setupVoiceCommandListener();
+  }
+
+  setupVoiceCommandListener(): void {
+    window.addEventListener('voiceCommand', (event: any) => {
+      const { function: funcName, parameters } = event.detail;
+      this.executeVoiceCommand(funcName, parameters);
+    });
+  }
+
+  executeVoiceCommand(funcName: string, parameters: any): void {
+    console.log('Ejecutando comando de voz:', funcName, parameters);
+
+    switch (funcName) {
+      case 'change_lang':
+        this.changeLangByVoice(parameters.lang);
+        break;
+      case 'toggle_high_contrast':
+        this.toggleHighContrastByVoice(parameters.enable);
+        break;
+      case 'toggle_voice':
+        this.toggleVoiceByVoice(parameters.enable);
+        break;
+      case 'search_jobs':
+        this.searchJobsByVoice(parameters);
+        break;
+      case 'clear_filters':
+        this.clearFilters();
+        break;
+      default:
+        console.log('Comando no reconocido:', funcName);
+    }
+  }
+
+  changeLangByVoice(lang: string): void {
+    this.currentLanguage = lang;
+    this.translateService.chageLanguage(lang);
+    const languageName = lang === 'es' ? this.translateService.translate('spanish') : this.translateService.translate('english');
+    const message = this.translateService.translate('languageChanged') + ' ' + languageName;
+    this.audioService.speak(message);
+  }
+
+  toggleHighContrastByVoice(enable: boolean): void {
+    const event = new CustomEvent('toggleHighContrast', { detail: { enable } });
+    window.dispatchEvent(event);
+  }
+
+  toggleVoiceByVoice(enable: boolean): void {
+    if (enable) {
+      this.audioService.speak(this.translateService.translate('voiceEnabled'));
+    }
+    const event = new CustomEvent('toggleVoice', { detail: { enable } });
+    window.dispatchEvent(event);
+  }
+
+  searchJobsByVoice(params: any): void {
+    if (params.searchTerm) {
+      this.searchForm.patchValue({ searchTerm: params.searchTerm });
+    }
+    if (params.location) {
+      this.searchForm.patchValue({ location: params.location });
+    }
+    if (params.jobType) {
+      this.searchForm.patchValue({ jobType: params.jobType });
+    }
+    if (params.remoteOnly !== undefined) {
+      this.searchForm.patchValue({ remoteOnly: params.remoteOnly });
+    }
+    this.onSearch();
   }
 
   loadJobsFromFirestore(): void {
@@ -150,6 +219,9 @@ export class JobSearchComponent implements OnInit {
     this.audioService.announceAction('clear');
     this.searchForm.reset();
     this.filteredJobs = this.jobs;
+
+    // Anunciar resultados de búsqueda
+    this.audioService.announceSearchResults(this.filteredJobs.length);
   }
 
   onApply(job: Job): void {
@@ -279,9 +351,10 @@ export class JobSearchComponent implements OnInit {
   toggleLanguage(): void {
     // Alternar entre español e inglés
     this.currentLanguage = this.currentLanguage === 'es' ? 'en' : 'es';
-    const message = this.currentLanguage === 'es' ? 'Se cambia a idioma Español' : 'Se cambia a idioma Ingles';
-    this.audioService.speak(message);
     this.translateService.chageLanguage(this.currentLanguage);
+    const languageName = this.currentLanguage === 'es' ? this.translateService.translate('spanish') : this.translateService.translate('english');
+    const message = this.translateService.translate('languageChanged') + ' ' + languageName;
+    this.audioService.speak(message);
   }
 
     @HostListener('window:keydown', ['$event'])
