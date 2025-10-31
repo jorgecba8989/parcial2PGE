@@ -84,6 +84,9 @@ export class JobSearchComponent implements OnInit {
       case 'search_jobs':
         this.searchJobsByVoice(parameters);
         break;
+      case 'clear_filters':
+        this.clearFilters();
+        break;
       default:
         console.log('Comando no reconocido:', funcName);
     }
@@ -216,6 +219,9 @@ export class JobSearchComponent implements OnInit {
     this.audioService.announceAction('clear');
     this.searchForm.reset();
     this.filteredJobs = this.jobs;
+
+    // Anunciar resultados de búsqueda
+    this.audioService.announceSearchResults(this.filteredJobs.length);
   }
 
   onApply(job: Job): void {
