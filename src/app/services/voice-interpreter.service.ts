@@ -14,7 +14,8 @@ export interface VoiceCommandResponse {
   providedIn: 'root'
 })
 export class VoiceInterpreterService {
-  private apiUrl = 'http://localhost:3000';
+  private isLocalhost = window.location.hostname === 'localhost' && window.location.protocol === 'http:';
+  private apiUrl = this.isLocalhost ? 'http://localhost:3000' : 'https://incluye-tool-assistant.netlify.app';
 
   constructor(private http: HttpClient) { }
 
