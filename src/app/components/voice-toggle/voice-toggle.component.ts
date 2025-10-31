@@ -49,7 +49,25 @@ export class VoiceToggleComponent implements OnInit, OnDestroy {
     }
   }
 
-  toggleVoiceCommand(): void {
+  async toggleVoiceCommand(): Promise<void> {
+    const currentState = this.voiceCommandService.isVoiceCommandEnabled();
+
+    // Si se está activando, solicitar permisos primero
+    if (!currentState) {
+      const permissionGranted = await this.voiceCommandService.requestMicrophonePermission();
+
+      if (!permissionGranted) {
+        // Si no se otorgó el permiso, mostrar error y no activar
+        const errorMessage = this.translationService.translate('voiceCommandError');
+        if (this.audioService.isVoiceActive()) {
+          this.audioService.speak(errorMessage);
+        }
+        this.audioService.playErrorSound();
+        console.warn('Permisos de micrófono denegados');
+        return;
+      }
+    }
+
     const newState = this.voiceCommandService.toggleVoiceCommand();
     const messageKey = newState ? 'voiceCommandsEnabled' : 'voiceCommandsDisabled';
     const message = this.translationService.translate(messageKey);
